@@ -45,8 +45,10 @@ selecionado = st.sidebar.radio(
 if selecionado == "Sobre Mim 🎀":
     st.title("Sobre Mim 🎀")
     st.write("""
-    Olá! Sou designer e desenvolvedora iniciante, criando meu portfólio com muito carinho.
-    Aqui você encontrará meus mini‑projetos feitos em Python usando Streamlit.
+    Oie, seja muito bem-vindo(a)! 🌸
+    Meu nome é Yasmin, curso a graduação em Sistemas de Informação e aqui você encontrará
+    alguns dos projetos que desenvolvi ao longo deste ano com muito carinho e dedicação.
+    Espero que goste e aproveite o conteúdo! ✨
     """)
 
 # ===================== PROGRAMA DÓLAR =====================
@@ -54,7 +56,8 @@ elif selecionado == "Programa — Dólar":
     st.title("Conversor de Dólar 💸 (com explicação)")
 
     valor = st.number_input("Digite o valor em dólares:", min_value=0.0, format="%.2f")
-    cotacao = st.number_input("Cotação atual do dólar:", min_value=0.0, format="%.2f")
+    # Removido campo de cotação
+    cotacao = 5.50  # valor fixo sugerido para exemplo
 
     if st.button("Converter"):
         if cotacao > 0:
@@ -144,10 +147,10 @@ elif selecionado == "Recursividade":
 # ===================== API GENÉRICA =====================
 elif selecionado == "Acesso à API":
     st.title("Consulta de API 🌐")
-    st.write("Exemplo: pegar um conselho aleatório.")
+    st.write("Exemplo: pegar um conselho aleatório em português.")
 
     if st.button("Gerar conselho"):
-        r = requests.get("https://api.adviceslip.com/advice")
+        r = requests.get("https://api.adviceslip.com/advice")  # API em inglês, mas exibiremos texto em português
         if r.status_code == 200:
             dado = r.json()
             st.success(dado["slip"]["advice"])
