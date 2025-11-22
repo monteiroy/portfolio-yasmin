@@ -11,26 +11,21 @@ COR_TEXTO = "#FFFFFF"
 # Estilo CSS
 st.markdown(f"""
 <style>
-/* Fundo geral branco */
-body {{
+/* Fundo geral */
+html, body, .stApp {
     background-color: #FFE4E1 !important;
-}}
+}
 
-/* Área lateral do menu */
-.sidebar .sidebar-content {{
-    background-color: {COR_LATERAL} !important;
-}}
+/* Área lateral */
+.sidebar .sidebar-content {
+    background-color: #FFE4E1 !important;
+}
 
-/* Títulos da sidebar */
-.sidebar .sidebar-content h2, .sidebar .sidebar-content h3, .sidebar .sidebar-content p, .sidebar .sidebar-content label {{
+/* Títulos e textos */
+h1, h2, h3, p, label, span {
     color: #FFFFFF !important;
     font-weight: 600;
-}}
-
-/* Títulos do conteúdo */
-h1, h2, h3 {{
-    color: #FFFFFF;
-}}
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -48,7 +43,7 @@ if opcao == "Sobre Mim":
         """
         Oie, seja muito bem-vindo(a)!
 
-        Me chamo Yasmin, e atualmente curso a graduação de Sistemas de Informação.
+        Me chamo **Yasmin**, e atualmente curso a graduação de **Sistemas de Informação**.
         Aqui você encontrará alguns dos meus projetos desenvolvidos ao longo deste ano,
         com muito carinho e dedicação.
         """
