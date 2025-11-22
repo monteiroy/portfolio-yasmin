@@ -3,9 +3,9 @@ import requests
 
 # Função para exibir o título e a explicação
 def exibir_titulo_e_explicacao():
-    st.title("Portfólio Yasmin 🎀")
-    st.write("Seja bem-vindo ao meu portfólio de projetos desenvolvidos durante meu curso de Sistemas de Informação!")
-    st.write("Aqui, você encontrará alguns projetos que fiz com muito carinho e dedicação ao longo deste ano. ")
+    st.title("🌸 Portfólio de Projetos 🎀")
+    st.write("Seja bem-vindo ao meu portfólio de projetos desenvolvidos durante meu curso de Sistemas de Informação! 💻")
+    st.write("Aqui, você encontrará alguns projetos que fiz com muito carinho e dedicação ao longo deste ano. 😊")
 
 # Função para o projeto de "Consultar CEP"
 def programa_consultar_cep():
@@ -14,23 +14,26 @@ def programa_consultar_cep():
     
     cep = st.text_input("Digite um CEP (ex: 01001-000):")
     
-    if cep:
-        st.write(f"Você digitou o CEP: {cep}")
-        
-        # Realiza a consulta na API viaCEP
-        response = requests.get(f'https://viacep.com.br/ws/{cep}/json/')
-        
-        if response.status_code == 200:
-            data = response.json()
-            if 'erro' not in data:
-                st.write(f"**Endereço:** {data['logradouro']}")
-                st.write(f"**Bairro:** {data['bairro']}")
-                st.write(f"**Cidade:** {data['localidade']}")
-                st.write(f"**Estado:** {data['uf']}")
+    if st.button("Consultar CEP"):
+        if cep:
+            st.write(f"Você digitou o CEP: {cep}")
+            
+            # Realiza a consulta na API viaCEP
+            response = requests.get(f'https://viacep.com.br/ws/{cep}/json/')
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'erro' not in data:
+                    st.write(f"**Endereço:** {data['logradouro']}")
+                    st.write(f"**Bairro:** {data['bairro']}")
+                    st.write(f"**Cidade:** {data['localidade']}")
+                    st.write(f"**Estado:** {data['uf']}")
+                else:
+                    st.error("CEP não encontrado!")
             else:
-                st.error("CEP não encontrado!")
+                st.error("Erro ao buscar informações do CEP.")
         else:
-            st.error("Erro ao buscar informações do CEP.")
+            st.error("Por favor, insira um CEP válido.")
 
     # Explicação do código
     if st.button('Explicação'):
@@ -141,7 +144,7 @@ def main():
     st.set_page_config(page_title="Portfólio da Yasmin", layout="wide")
     
     # Barra lateral
-    st.sidebar.title("Escolha um Projeto")
+    st.sidebar.title("📚 Projetos")
     escolha = st.sidebar.radio(
         "Escolha um projeto:",
         ["Sobre Mim", "Consultar CEP", "Converter Dólar", "Decisão e Repetição", "Recursividade", "Acesso a API"]
@@ -163,4 +166,3 @@ def main():
 # Chama a função principal para executar o app
 if __name__ == "__main__":
     main()
-
