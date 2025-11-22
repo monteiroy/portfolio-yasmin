@@ -7,7 +7,7 @@ st.set_page_config(page_title="Portfólio Yasmin Monteiro", layout="wide")
 # Cores
 COR_DETALHE = "#FFC0CB"  # Rosa claro para detalhes
 COR_AREA = "#FFFFFF"      # Branco para área principal
-COR_TEXTO = "#000000"     # Preto para textos
+COR_TEXTOS = "#000000"     # Preto para textos
 
 st.markdown(f"""
 <style>
@@ -19,13 +19,10 @@ section.main {{
     padding: 1rem;
     border-radius: 10px;
 }}
-h1, h2, h3, p, label, span {{
-    color: {COR_TEXTO} !important;
-    font-weight: 600;
-}}
 .stButton>button {{
     background-color: {COR_DETALHE} !important;
     color: white !important;
+    font-weight: 600;
 }}
 .sidebar .sidebar-content {{
     background-color: {COR_DETALHE} !important;
@@ -36,13 +33,26 @@ h1, h2, h3, p, label, span {{
     color: white !important;
     font-weight: 600;
 }}
+.card {{
+    background-color: {COR_DETALHE};
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    color: white;
+}}
+.card h3 {{
+    color: white;
+}}
+.card p {{
+    color: white;
+}}
 </style>
 """, unsafe_allow_html=True)
 
 st.sidebar.title("📚 Projetos")
 opcao = st.sidebar.radio(
     "Escolha uma opção:",
-    ["Sobre Mim", "Programa Dólar", "Consultar CEP", "Decisão e Repetição", "Recursividade", "Acesso à API"]
+    ["Sobre Mim", "Programa Dólar", "Consultar CEP", "Decisão e Repetição", "Recursividade", "Acesso à API", "Outros Projetos"]
 )
 
 if opcao == "Sobre Mim":
@@ -58,7 +68,8 @@ if opcao == "Sobre Mim":
     """)
 
 elif opcao == "Programa Dólar":
-    st.title("💱 Conversor de Dólar para Real")
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("💱 Conversor de Dólar para Real")
     valor = st.number_input("Digite o valor em dólar:", min_value=0.0, step=0.01)
     cotacao = 5.60
     if st.button("Converter"):
@@ -66,9 +77,11 @@ elif opcao == "Programa Dólar":
         st.success(f"Valor convertido: R$ {resultado:.2f}")
     with st.expander("📘 Explicação do Projeto"):
         st.write("Converte dólares em reais multiplicando pelo valor fixo da cotação (5.60).")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 elif opcao == "Consultar CEP":
-    st.title("🏠 Consultar CEP")
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("🏠 Consultar CEP")
     cep_input = st.text_input("Digite o CEP (somente números):")
     if st.button("Buscar CEP"):
         if cep_input:
@@ -91,9 +104,11 @@ elif opcao == "Consultar CEP":
             st.warning("Digite um CEP válido")
     with st.expander("📘 Explicação do Projeto"):
         st.write("Consulta um CEP usando a API ViaCEP e retorna logradouro, bairro, cidade e estado.")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 elif opcao == "Decisão e Repetição":
-    st.title("🔁 Decisão e Repetição")
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("🔁 Decisão e Repetição")
     numero_input = st.number_input("Digite um número para ver pares e ímpares até ele:", min_value=1, step=1)
     if st.button("Executar"):
         st.write("Resultado:")
@@ -101,9 +116,11 @@ elif opcao == "Decisão e Repetição":
             st.write(f"{i} é {'par' if i % 2 == 0 else 'ímpar'}")
     with st.expander("📘 Explicação do Projeto"):
         st.write("Mostra números pares e ímpares usando laços de repetição e condicionais.")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 elif opcao == "Recursividade":
-    st.title("🔄 Recursividade")
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("🔄 Recursividade")
     numero_rec = st.number_input("Digite um número para calcular o fatorial:", min_value=0, step=1)
     def fatorial(n):
         return 1 if n == 0 else n * fatorial(n-1)
@@ -111,9 +128,11 @@ elif opcao == "Recursividade":
         st.success(f"O fatorial de {numero_rec} é {fatorial(numero_rec)}")
     with st.expander("📘 Explicação do Projeto"):
         st.write("Calcula o fatorial de um número usando recursão.")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 elif opcao == "Acesso à API":
-    st.title("🌐 Acesso à API")
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("🌐 Acesso à API")
     st.write("Consulta de idade estimada pelo nome usando a API Agify.")
     nome_input = st.text_input("Digite o nome para consultar:", "")
     
@@ -132,3 +151,16 @@ elif opcao == "Acesso à API":
             st.warning("Digite um nome válido")
     with st.expander("📘 Explicação do Projeto"):
         st.write("Consulta a idade estimada de um nome usando a API Agify e exibe o resultado em tabela.")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+elif opcao == "Outros Projetos":
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+    st.subheader("💻 Projeto Figma - Site Desktop para Designer de Sobrancelhas")
+    st.write("""
+    Este projeto foi desenvolvido para a matéria de **Interação Humano-Computador**.  
+    Consiste em um protótipo de site desktop voltado para designers de sobrancelhas.  
+
+    Para visualizar melhor o projeto, clique no botão **Avançar** dentro da tela do Figma.
+    """)
+    st.markdown("[🔗 Acessar Projeto Figma](https://www.figma.com/proto/m14L5GmZzywpkPvbSaaGBi/Untitled?node-id=1-5&starting-point-node-id=1%3A5)")
+    st.markdown('</div>', unsafe_allow_html=True)
