@@ -1,168 +1,118 @@
 import streamlit as st
 import requests
 
-# Função para exibir o título e a explicação
-def exibir_titulo_e_explicacao():
-    st.title("Portfólio Yasmin 🎀")
-    st.write("Oie, seja bem-vindo(a) ao meu portfólio de projetos desenvolvidos durante minha graduação em Sistemas de Informação, ao longo deste ano.")
- 
+st.set_page_config(page_title="Portfólio Yasmin Monteiro", layout="wide")
 
-# Função para o projeto de "Consultar CEP"
-def programa_consultar_cep():
-    st.header("🔍 Consultar CEP")
-    st.write("Este programa permite consultar informações sobre um CEP informado.")
-    
-    cep = st.text_input("Digite um CEP (ex: 01001-000):")
-    
-    if st.button("Consultar CEP"):
-        if cep:
-            st.write(f"Você digitou o CEP: {cep}")
-            
-            # Realiza a consulta na API viaCEP
-            response = requests.get(f'https://viacep.com.br/ws/{cep}/json/')
-            
+# Cores delicadas
+COR_FUNDO = "#FFF0F5"      # Fundo geral rosa muito claro
+COR_AREA = "#FFFFFF"       # Área principal branca
+COR_TEXTOS = "#000000"     # Textos pretos
+
+st.markdown(f"""
+<style>
+html, body, .stApp {{
+    background-color: {COR_FUNDO} !important;
+}}
+section.main {{
+    background-color: {COR_AREA} !important;
+    padding: 1rem;
+    border-radius: 10px;
+}}
+h1, h2, h3, p, label, span {{
+    color: {COR_TEXTOS} !important;
+    font-weight: 600;
+}}
+.sidebar .sidebar-content {{
+    background-color: {COR_FUNDO} !important;
+}}
+.sidebar .sidebar-content span, .sidebar .sidebar-content label {{
+    color: {COR_TEXTOS} !important;
+    font-weight: 600;
+}}
+</style>
+""", unsafe_allow_html=True)
+
+st.sidebar.title("📚 Projetos")
+opcao = st.sidebar.radio(
+    "Escolha uma opção:",
+    ["Sobre Mim", "Programa Dólar", "Consultar CEP", "Decisão e Repetição", "Recursividade", "Acesso à API"]
+)
+
+if opcao == "Sobre Mim":
+    st.title("🎀 Sobre Mim")
+    st.write("""
+    Me chamo **Yasmin**, e atualmente curso a graduação de **Sistemas de Informação**.
+    Aqui você encontrará alguns dos meus projetos desenvolvidos ao longo deste ano,
+    com muito carinho e dedicação.
+    """)
+
+elif opcao == "Programa Dólar":
+    st.title("💱 Conversor de Dólar para Real")
+    valor = st.number_input("Digite o valor em dólar:", min_value=0.0, step=0.01)
+    cotacao = 5.60
+    if st.button("Converter"):
+        resultado = valor * cotacao
+        st.success(f"Valor convertido: R$ {resultado:.2f}")
+    with st.expander("📘 Explicação do Projeto"):
+        st.write("Este programa converte dólares em reais multiplicando pelo valor fixo da cotação (5.60).")
+
+elif opcao == "Consultar CEP":
+    st.title("🏠 Consultar CEP")
+    cep_input = st.text_input("Digite o CEP (somente números):")
+    if st.button("Buscar CEP"):
+        if cep_input:
+            response = requests.get(f"https://viacep.com.br/ws/{cep_input}/json/")
             if response.status_code == 200:
                 data = response.json()
-                if 'erro' not in data:
-                    st.write(f"**Endereço:** {data['logradouro']}")
-                    st.write(f"**Bairro:** {data['bairro']}")
-                    st.write(f"**Cidade:** {data['localidade']}")
-                    st.write(f"**Estado:** {data['uf']}")
-                else:
+                if "erro" in data:
                     st.error("CEP não encontrado!")
+                else:
+                    st.subheader("📌 Resultado:")
+                    st.write(f"CEP: {data.get('cep','')}")
+                    st.write(f"Logradouro: {data.get('logradouro','')}")
+                    st.write(f"Complemento: {data.get('complemento','')}")
+                    st.write(f"Bairro: {data.get('bairro','')}")
+                    st.write(f"Cidade: {data.get('localidade','')}")
+                    st.write(f"Estado: {data.get('uf','')}")
             else:
-                st.error("Erro ao buscar informações do CEP.")
+                st.error("Erro na requisição da API")
         else:
-            st.error("Por favor, insira um CEP válido.")
+            st.warning("Digite um CEP válido")
+    with st.expander("📘 Explicação do Projeto"):
+        st.write("Consulta um CEP usando a API ViaCEP e retorna logradouro, bairro, cidade e estado.")
 
-    # Explicação do código
-    if st.button('Explicação'):
-        st.write("""
-            Este programa usa a API ViaCEP para buscar o endereço completo a partir de um CEP fornecido.
-            Ele retorna as informações de logradouro, bairro, cidade e estado.
-        """)
+elif opcao == "Decisão e Repetição":
+    st.title("🔁 Decisão e Repetição")
+    numero_input = st.number_input("Digite um número para ver pares e ímpares até ele:", min_value=1, step=1)
+    if st.button("Executar"):
+        st.write("Resultado:")
+        for i in range(1, numero_input + 1):
+            st.write(f"{i} é {'par' if i % 2 == 0 else 'ímpar'}")
+    with st.expander("📘 Explicação do Projeto"):
+        st.write("Mostra números pares e ímpares usando laços de repetição e condicionais.")
 
-# Função para o projeto de "Converter Dólar"
-def programa_converter_dolar():
-    st.header("💵 Converter Dólar")
-    st.write("Este programa converte o valor de dólares para reais com base na cotação atual.")
-    
-    valor_dolar = st.number_input("Digite o valor em dólares:", min_value=0.01, step=0.01)
-    
-    if valor_dolar:
-        # Exemplo de cotação fixa (a cotação real pode ser obtida com uma API de câmbio)
-        cotacao = 5.4  # Cotação de exemplo para fins didáticos
-        valor_real = valor_dolar * cotacao
-        st.write(f"{valor_dolar} USD é igual a **R${valor_real:,.2f}**.")
-        
-    # Explicação do código
-    if st.button('Explicação'):
-        st.write("""
-            Este programa recebe o valor em dólares e o converte para reais com base em uma cotação fixa.
-            Você pode ajustar a cotação para obter valores reais utilizando uma API de câmbio.
-        """)
-
-# Função para o programa de "Decisão e Repetição"
-def programa_decisao_repeticao():
-    st.header("🔢 Tabela de Multiplicação")
-    st.write("Este programa gera a tabuada de multiplicação de um número que você escolher.")
-    
-    numero = st.number_input("Digite um número para ver a tabuada:", min_value=1, max_value=100)
-    
-    if numero:
-        tabuada = [numero * i for i in range(1, 11)]
-        st.write(f"A tabuada do {numero} é:")
-        for i, resultado in enumerate(tabuada, 1):
-            st.write(f"{numero} x {i} = {resultado}")
-    
-    # Explicação do código
-    if st.button('Explicação'):
-        st.write("""
-            Este programa usa um loop para calcular e exibir a tabuada de um número informado.
-            A tabuada é calculada multiplicando o número por 1 até 10.
-        """)
-
-# Função para o programa de "Recursividade"
-def programa_recursividade():
-    st.header("♻️ Fatorial (Recursivo)")
-    st.write("Este programa calcula o fatorial de um número utilizando recursividade.")
-    
-    numero = st.number_input("Digite um número para calcular o fatorial:", min_value=0)
-    
+elif opcao == "Recursividade":
+    st.title("🔄 Recursividade")
+    numero_rec = st.number_input("Digite um número para calcular o fatorial:", min_value=0, step=1)
     def fatorial(n):
-        if n == 0:
-            return 1
+        return 1 if n == 0 else n * fatorial(n-1)
+    if st.button("Calcular Fatorial"):
+        st.success(f"O fatorial de {numero_rec} é {fatorial(numero_rec)}")
+    with st.expander("📘 Explicação do Projeto"):
+        st.write("Calcula o fatorial de um número usando recursão.")
+
+elif opcao == "Acesso à API":
+    st.title("🌐 Acesso à API")
+    nome_input = st.text_input("Digite um nome para consultar:", "Yasmin")
+    if st.button("Consultar API"):
+        response = requests.get(f"https://api.agify.io?name={nome_input}")
+        if response.status_code == 200:
+            data = response.json()
+            st.subheader("📌 Resultado da API:")
+            st.write(f"Nome: {data.get('name')}")
+            st.write(f"Idade estimada: {data.get('age')}")
+            st.write(f"Contagem de registros: {data.get('count')}")
         else:
-            return n * fatorial(n-1)
-    
-    if numero is not None and numero >= 0:
-        st.write(f"O fatorial de {numero} é {fatorial(numero)}.")
-    
-    # Explicação do código
-    if st.button('Explicação'):
-        st.write("""
-            Este programa utiliza a técnica de recursividade para calcular o fatorial de um número.
-            A recursão é um processo no qual a função se chama dentro dela mesma até atingir um caso base.
-        """)
-
-# Função para o projeto de "Acesso a API"
-def programa_acesso_api():
-    st.header("🌐 Acesso a API")
-    st.write("Este projeto faz uma chamada simples a uma API externa e exibe o resultado.")
-    
-    # Campo para o usuário digitar um IP
-    ip_usuario = st.text_input("Digite um endereço IP para consultar (deixe vazio para pegar o seu IP público):")
-    
-    if ip_usuario:
-        response = requests.get(f'https://ipinfo.io/{ip_usuario}/json')
-    else:
-        response = requests.get('https://ipinfo.io/json')
-    
-    if response.status_code == 200:
-        ip_data = response.json()
-        st.write(f"IP Consultado: {ip_data['ip']}")
-        st.write(f"Localização: {ip_data['city']}, {ip_data['region']}, {ip_data['country']}")
-    else:
-        st.error("Não foi possível obter as informações do IP.")
-    
-    # Explicação do código
-    if st.button('Explicação'):
-        st.write("""
-            Este programa realiza uma requisição à API ipinfo.io.
-            O usuário pode digitar um IP específico ou deixar em branco para obter o seu IP público.
-            A API retorna informações como cidade, região e país do IP consultado.
-        """)
-
-# Função para a aba "Sobre mim"
-def sobre_mim():
-    st.header("🎀 Sobre Mim")
-    st.write("Me chamo Yasmin, e atualmente curso a graduação de Sistemas de Informação. Aqui você encontrará alguns dos meus projetos desenvolvidos ao longo deste ano, com muito carinho e dedicação.")
-
-# Função principal para definir os projetos
-def main():
-    # Configurações de layout
-    st.set_page_config(page_title="Portfólio da Yasmin", layout="wide")
-    
-    # Barra lateral
-    st.sidebar.title("📚 Projetos")
-    escolha = st.sidebar.radio(
-        "Escolha um projeto:",
-        ["Sobre Mim", "Consultar CEP", "Converter Dólar", "Decisão e Repetição", "Recursividade", "Acesso a API"]
-    )
-    
-    if escolha == "Sobre Mim":
-        sobre_mim()
-    elif escolha == "Consultar CEP":
-        programa_consultar_cep()
-    elif escolha == "Converter Dólar":
-        programa_converter_dolar()
-    elif escolha == "Decisão e Repetição":
-        programa_decisao_repeticao()
-    elif escolha == "Recursividade":
-        programa_recursividade()
-    elif escolha == "Acesso a API":
-        programa_acesso_api()
-
-# Chama a função principal para executar o app
-if __name__ == "__main__":
-    main()
+            st.error("Falha ao acessar a API")
+    with st.expander("📘 Explicação do Projeto"):
+        st.write("Consulta a idade estimada de um nome usando a API Agify.")
