@@ -1,107 +1,223 @@
+# app.py
 import streamlit as st
 import requests
+import urllib.parse
 
-# Configurações Gerais (simplificado) ====================
+# ------------------ Configuração da página ------------------
 st.set_page_config(page_title="Portifolio Yasmin Monteiro", layout="wide")
 
-COR_PRINCIPAL = "#FFDAB9"
-COR_LATERAL = "#FFE4E1"
-COR_TEXTO = "#FFFFFF"
+# ------------------ Cores e estilo ------------------
+SIDEBAR_BG = "#FFE4E1"   # cor solicitada para a área de seleção
+TITLE_COLOR = "#FFDAB9"  # cor dos títulos no conteúdo principal
+SIDEBAR_TEXT = "#FFFFFF" # texto branco na sidebar
 
-# Estilo CSS
-st.markdown(f"""
-<style>
-/* Fundo geral */
-html, body, .stApp {
-    background-color: #FFE4E1 !important;
-}
+st.markdown(
+    f"""
+    <style>
+    /* Força o fundo do app (área principal) branco */
+    .stApp .css-18e3th9 {{ background-color: white; }}
+    .block-container {{ background-color: white !important; }}
 
-/* Área lateral */
-.sidebar .sidebar-content {
-    background-color: #FFE4E1 !important;
-}
+    /* Sidebar (selector) - usa data-testid para maior compatibilidade */
+    [data-testid="stSidebar"] {{
+        background-color: {SIDEBAR_BG} !important;
+    }}
+    /* Força texto branco dentro da sidebar */
+    [data-testid="stSidebar"] * {{
+        color: {SIDEBAR_TEXT} !important;
+    }}
+    /* Ajustes de legibilidade: links, labels e entradas na sidebar */
+    [data-testid="stSidebar"] .stRadio, 
+    [data-testid="stSidebar"] .stMarkdown, 
+    [data-testid="stSidebar"] label {{
+        color: {SIDEBAR_TEXT} !important;
+    }}
 
-/* Títulos e textos */
-h1, h2, h3, p, label, span {
-    color: #FFFFFF !important;
-    font-weight: 600;
-}
-</style>
-""", unsafe_allow_html=True)
+    /* Títulos no conteúdo principal */
+    h1, h2, h3 {{
+        color: {TITLE_COLOR} !important;
+    }}
 
-# ==================== SIDEBAR ====================
+    /* Mantém texto do corpo escuro para legibilidade no fundo branco */
+    .stApp .css-1d391kg, .stApp .stText {{ color: #111111 !important; }}
+
+    /* Remove destaque azul padrão em alguns elementos */
+    .st-bf {{ box-shadow: none !important; }}
+
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# ------------------ Sidebar / Navegação ------------------
 st.sidebar.title("📚 Projetos")
 opcao = st.sidebar.radio(
     "Escolha uma opção:",
-    ["Sobre Mim", "Programa Dólar", "Consultar CEP", "Decisão e Repetição", "Recursividade", "Acesso à API"]
+    ["Sobre Mim", "Conversor Dólar", "Consultar CEP", "Decisão e Repetição", "Recursividade", "Acesso à API"]
 )
 
-# ==================== SOBRE MIM ====================
+# ------------------ Sobre Mim ------------------
 if opcao == "Sobre Mim":
     st.title("🎀 Sobre Mim")
     st.write(
         """
-        Oie, seja muito bem-vindo(a)!
+Oie, seja muito bem-vindo(a)!
 
-        Me chamo **Yasmin**, e atualmente curso a graduação de **Sistemas de Informação**.
-        Aqui você encontrará alguns dos meus projetos desenvolvidos ao longo deste ano,
-        com muito carinho e dedicação.
+Me chamo **Yasmin**, e atualmente curso a graduação em **Sistemas de Informação**.
+Aqui você encontrará alguns dos meus projetos desenvolvidos ao longo deste ano,
+com muito carinho e dedicação.
         """
     )
 
-# ==================== PROGRAMA DÓLAR ====================
-elif opcao == "Programa Dólar":
+# ------------------ Conversor Dólar ------------------
+elif opcao == "Conversor Dólar":
     st.title("💱 Conversor de Dólar para Real")
+    st.write("Insira o valor em dólares. O resultado será exibido em reais (R$).")
 
-    valor = st.number_input("Digite o valor em dólar:")
-    cotacao = 5.60
+    # entrada simples: número em dólares
+    valor_dolar = st.number_input("Valor (US$):", min_value=0.0, format="%.2f", step=1.0)
+    # cotação fixa no código (você pode atualizar conforme quiser)
+    COTACAO_PADRAO = 5.60
 
     if st.button("Converter"):
-        resultado = valor * cotacao
-        st.success(f"Valor convertido: **R$ {resultado:.2f}**")
+        resultado = valor_dolar * COTACAO_PADRAO
+        st.success(f"Valor convertido: **R$ {resultado:,.2f}**")
 
-    with st.expander("📘 Explicação do Código"):
+    # botão separado para mostrar explicação do código
+    if st.button("Mostrar explicação (Conversor)"):
         st.write(
             """
-            O conversor multiplica o valor em dólar pela cotação fixa definida no código.
-            Ele utiliza entrada numérica do usuário e exibe o resultado formatado.
+**O que este programa faz:**  
+- Recebe um valor em dólares (entrada numérica).  
+- Multiplica pela cotação fixa definida em `COTACAO_PADRAO`.  
+- Exibe o resultado formatado com `R$`.
             """
         )
 
-# ==================== CONSULTAR CEP ====================
+# ------------------ Consultar CEP ------------------
 elif opcao == "Consultar CEP":
     st.title("📍 Consultar CEP")
-    cep = st.text_input("Digite o CEP:")
+    st.write("Digite o CEP (apenas números, 8 dígitos) e clique em *Consultar*.")
 
+    cep = st.text_input("CEP (ex: 01001000):", value="")
     if st.button("Consultar"):
-        try:
-            resposta = requests.get(f"https://viacep.com.br/ws/{cep}/json/")
-            dados = resposta.json()
-
-            if "erro" in dados:
-                st.error("CEP inválido!")
-            else:
-                st.success("Endereço encontrado!")
-                st.write(f"**Rua:** {dados['logradouro']}")
-                st.write(f"**Bairro:** {dados['bairro']}")
-                st.write(f"**Cidade:** {dados['localidade']}")
-                st.write(f"**Estado:** {dados['uf']}")
-        except:
-            st.error("Erro ao consultar o CEP.")
-
-    with st.expander("📘 Explicação do Código"):
-        st.write("O programa faz uma requisição para a API ViaCEP e retorna o endereço correspondente.")
-
-# ==================== DECISÃO E REPETIÇÃO ====================
-elif opcao == "Decisão e Repetição":
-    st.title("🔄 Estruturas de Decisão e Repetição")
-    numero = st.number_input("Digite um número:")
-
-    if st.button("Verificar"):
-        if numero % 2 == 0:
-            st.success("O número é PAR.")
+        cep_limpo = "".join([c for c in cep if c.isdigit()])
+        if len(cep_limpo) != 8:
+            st.warning("Digite um CEP válido com 8 dígitos.")
         else:
-            st.success("O número é ÍMPAR.")
+            try:
+                resp = requests.get(f"https://viacep.com.br/ws/{cep_limpo}/json/", timeout=5)
+                if resp.status_code == 200:
+                    dados = resp.json()
+                    if dados.get("erro"):
+                        st.error("CEP não encontrado.")
+                    else:
+                        st.success("Endereço encontrado:")
+                        st.write(f"**Logradouro:** {dados.get('logradouro','-')}")
+                        st.write(f"**Complemento:** {dados.get('complemento','-')}")
+                        st.write(f"**Bairro:** {dados.get('bairro','-')}")
+                        st.write(f"**Localidade:** {dados.get('localidade','-')}")
+                        st.write(f"**UF:** {dados.get('uf','-')}")
+                else:
+                    st.error("Erro ao consultar o serviço ViaCEP.")
+            except requests.RequestException:
+                st.error("Erro de conexão ao consultar o CEP. Tente novamente.")
+
+    # explicação em expander
+    with st.expander("Explicação do Código (Consultar CEP)"):
+        st.write(
+            """
+O programa usa a API pública **ViaCEP**.  
+Fluxo:
+1. Limpa o CEP (mantém apenas dígitos).  
+2. Verifica formato (8 dígitos).  
+3. Faz requisição GET para `https://viacep.com.br/ws/{cep}/json/`.  
+4. Exibe os campos retornados (logradouro, bairro, cidade, estado).
+            """
+        )
+
+# ------------------ Decisão e Repetição ------------------
+elif opcao == "Decisão e Repetição":
+    st.title("🔄 Decisão e Repetição — Tempo de Atendimento")
+    st.write("Exemplo prático: calcular tempo total de atendimentos (sobrancelhas).")
+
+    qtd = st.number_input("Quantos atendimentos você fará?", min_value=1, step=1, value=1)
+    tempo_minutos = st.number_input("Tempo por atendimento (minutos):", min_value=1, step=1, value=25)
+
+    if st.button("Calcular tempo total"):
+        total = qtd * tempo_minutos
+        horas = total // 60
+        minutos = total % 60
+        st.success(f"Tempo total estimado: **{horas}h {minutos}min**")
+
+    if st.button("Mostrar explicação (Decisão e Repetição)"):
+        st.write(
+            """
+Este exemplo usa:
+- Entrada numérica (`st.number_input`) para quantidade e tempo por atendimento.
+- Operação de repetição implícita (multiplicação) para calcular o total.
+- Estruturas de decisão para validar entrada e mostrar resultado quando o usuário clica no botão.
+            """
+        )
+
+# ------------------ Recursividade ------------------
+elif opcao == "Recursividade":
+    st.title("🌀 Recursividade — Fatorial")
+    n = st.number_input("Calcular fatorial de (n):", min_value=0, step=1, value=5)
+
+    def fatorial(x: int) -> int:
+        if x <= 1:
+            return 1
+        return x * fatorial(x - 1)
+
+    if st.button("Calcular Fatorial"):
+        st.success(f"Resultado: **{fatorial(n)}**")
+
+    if st.button("Mostrar explicação (Recursividade)"):
+        st.write(
+            """
+A função `fatorial` chama a si mesma até atingir o caso base (x <= 1).
+Cada chamada reduz `x` em 1 até chegar ao valor base.
+            """
+        )
+
+# ------------------ Acesso à API (Conselho em PT) ------------------
+elif opcao == "Acesso à API":
+    st.title("🌐 Acesso à API — Conselho em Português")
+    st.write("Clique para gerar um conselho traduzido para o português.")
+
+    if st.button("Gerar conselho"):
+        try:
+            # Obtem conselho (em inglês) da API
+            r = requests.get("https://api.adviceslip.com/advice", timeout=5)
+            if r.status_code == 200:
+                conselho_en = r.json().get("slip", {}).get("advice", "")
+                if not conselho_en:
+                    st.error("Resposta inesperada da API.")
+                else:
+                    # traduz com MyMemory (gratuito)
+                    q = urllib.parse.quote(conselho_en)
+                    tr = requests.get(f"https://api.mymemory.translated.net/get?q={q}&langpair=en|pt", timeout=5)
+                    if tr.status_code == 200:
+                        conselho_pt = tr.json().get("responseData", {}).get("translatedText", "")
+                        st.success(conselho_pt)
+                    else:
+                        st.info(conselho_en)  # se falhar tradução, mostra inglês
+            else:
+                st.error("Erro ao obter conselho.")
+        except requests.RequestException:
+            st.error("Erro de conexão ao acessar a API.")
+
+    if st.button("Mostrar explicação (Acesso à API)"):
+        st.write(
+            """
+Fluxo:
+1. Requisição GET para `api.adviceslip.com` (retorna conselho em inglês).  
+2. Requisição GET para `api.mymemory.translated.net` (tradução automática para pt).  
+3. Exibe o texto traduzido.  
+Observação: ambos serviços são gratuitos, com limites; a tradução pode ser simples.
+            """
+        )
 
     with st.expander("📘 Explicação do Código"):
         st.write("Aqui são usadas estruturas condicionais para verificar se o número é par ou ímpar.")
