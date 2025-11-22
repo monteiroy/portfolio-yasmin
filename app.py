@@ -62,10 +62,7 @@ elif opcao == "Programa Dólar":
 
     with st.expander("📘 Explicação do Código"):
         st.write(
-            """
-            O conversor simplesmente multiplica o valor digitado pela cotação fixa definida no código.
-            Não usa nenhuma API — apenas faz a operação matemática e exibe o resultado.
-            """
-            O conversor apenas recebe o valor, multiplica pela cotação (5.60) e mostra o resultado.
+            "O conversor multiplica o valor digitado pela cotação fixa (5.60) e exibe o resultado."
+        ) e mostra o resultado.
             """
         )
