@@ -1,178 +1,193 @@
 import streamlit as st
 import requests
 
-# ===================== CONFIGURAÇÕES DE ESTILO =====================
-PRIMARY_COLOR = "#FFDAB9"  # tom pastel solicitado
-PRIMARY_DARK = "#e6c3a3"   # versão mais escura para menu lateral
-TEXT_COLOR = "#FFDAB9"     # texto nos títulos
+# ==========================
+# CONFIGURAÇÃO DO SITE
+# ==========================
 
-st.set_page_config(page_title="Portfólio — Designer", layout="wide")
+st.set_page_config(page_title="Portfólio Yasmin Monteiro", layout="wide")
 
-# ===================== CSS PERSONALIZADO =====================
-st.markdown(f"""
-<style>
-/* Fundo principal branco */
-body {{
-    background-color: white !important;
-}}
+SIDEBAR_COLOR = "#f7c7a5"  # #FFDAB9 mais escuro
+MAIN_COLOR = "#FFDAB9"
 
-/* Títulos com a cor escolhida */
-h1, h2, h3, h4, h5, h6 {{
-    color: {TEXT_COLOR} !important;
-}}
-
-/* Barra lateral com cor pastel escura */
-[data-testid="stSidebar"] {{
-    background-color: {PRIMARY_DARK} !important;
-}}
-
-/* Texto da barra lateral */
-[data-testid="stSidebar"] * {{
-    color: white !important;
-    font-size: 17px !important;
-}}
-</style>
-""", unsafe_allow_html=True)
-
-# ===================== MENU LATERAL =====================
-st.sidebar.title("Menu ✨")
-selecionado = st.sidebar.radio(
-    "Navegação",
-    ["Sobre Mim 🎀", "Programa — Dólar", "Programa — CEP", "Decisão e Repetição", "Recursividade", "Acesso à API"]
+st.markdown(
+    f"""
+    <style>
+        .sidebar .sidebar-content {{
+            background-color: {SIDEBAR_COLOR} !important;
+        }}
+        body {{
+            background-color: white !important;
+        }}
+        .main-title {{
+            color: {MAIN_COLOR};
+            font-weight: 700;
+            font-size: 36px;
+        }}
+        .section-title {{
+            color: {MAIN_COLOR};
+            font-size: 28px;
+            font-weight: 700;
+        }}
+        .text-colored {{
+            color: {MAIN_COLOR};
+        }}
+    </style>
+    """,
+    unsafe_allow_html=True
 )
 
-# ===================== SOBRE MIM =====================
-if selecionado == "Sobre Mim 🎀":
-    st.title("Sobre Mim 🎀")
+# ==========================
+# BARRA LATERAL
+# ==========================
+
+st.sidebar.title("Projetos")
+
+opcao = st.sidebar.radio(
+    "Selecione uma opção:",
+    ["Sobre Mim 🎀", "Programa Dólar", "Consultar CEP", "Decisão e Repetição", "Recursividade", "Acesso à API"],
+)
+
+# ==========================
+# SOBRE MIM
+# ==========================
+
+if opcao == "Sobre Mim 🎀":
+    st.markdown('<h1 class="main-title">Sobre Mim 🎀</h1>', unsafe_allow_html=True)
+
     st.write("""
-    Oie, seja muito bem-vindo(a)! 🌸
-    Meu nome é Yasmin, curso a graduação em Sistemas de Informação e aqui você encontrará
-    alguns dos projetos que desenvolvi ao longo deste ano com muito carinho e dedicação.
-    Espero que goste e aproveite o conteúdo! ✨
+    Oie, seja muito bem-vindo(a)!  
+    Me chamo **Yasmin**, e atualmente curso a graduação de **Sistemas de Informação**.  
+
+    Aqui você encontrará alguns dos meus projetos desenvolvidos ao longo do ano, 
+    com muito carinho, dedicação e aprendizado. 🌸  
     """)
 
-# ===================== PROGRAMA DÓLAR =====================
-elif selecionado == "Programa — Dólar":
-    st.title("Conversor de Dólar 💸 (com explicação)")
+# ==========================
+# PROGRAMA DÓLAR
+# ==========================
 
-    valor = st.number_input("Digite o valor em dólares:", min_value=0.0, format="%.2f")
-    # Removido campo de cotação
-    cotacao = 5.50  # valor fixo sugerido para exemplo
+elif opcao == "Programa Dólar":
+    st.markdown('<h1 class="main-title">Conversor de Dólar 💱</h1>', unsafe_allow_html=True)
+
+    valor = st.number_input("Digite o valor em dólar (US$):", min_value=0.0, format="%.2f")
 
     if st.button("Converter"):
-        if cotacao > 0:
-            resultado = valor * cotacao
-            st.success(f"Valor em reais: R$ {resultado:.2f}")
+        cotacao = 5.75
+        resultado = valor * cotacao
+        st.success(f"O valor convertido é **R$ {resultado:.2f}**")
 
-    with st.expander("📘 Explicação do Código"):
-        st.write("""
-        Este programa multiplica o valor em dólares pela cotação atual.
-        Ele usa uma estrutura simples de decisão: só converte se o usuário clicar no botão.
+    if st.button("Ver explicação do código"):
+        st.info("""
+        O programa pega um valor em dólar informado pelo usuário,
+        multiplica pela cotação fixa definida no código,
+        e exibe o resultado convertido em reais.
         """)
 
-# ===================== PROGRAMA CEP =====================
-elif selecionado == "Programa — CEP":
-    st.title("Consulta de CEP 📍")
+# ==========================
+# CONSULTAR CEP
+# ==========================
+
+elif opcao == "Consultar CEP":
+    st.markdown('<h1 class="main-title">Consultar CEP 📍</h1>', unsafe_allow_html=True)
 
     cep = st.text_input("Digite o CEP (somente números):")
 
-    if st.button("Consultar CEP"):
-        if len(cep) == 8:
+    if st.button("Consultar"):
+        if len(cep) == 8 and cep.isdigit():
             url = f"https://viacep.com.br/ws/{cep}/json/"
-            r = requests.get(url)
+            resposta = requests.get(url).json()
 
-            if r.status_code == 200:
-                dados = r.json()
-                if "erro" not in dados:
-                    st.success("Endereço encontrado:")
-                    st.write(f"**Rua:** {dados['logradouro']}")
-                    st.write(f"**Bairro:** {dados['bairro']}")
-                    st.write(f"**Cidade:** {dados['localidade']}")
-                    st.write(f"**Estado:** {dados['uf']}")
-                else:
-                    st.error("CEP não encontrado.")
+            if "erro" not in resposta:
+                st.success("Endereço encontrado:")
+                st.write(f"**Rua:** {resposta['logradouro']}")
+                st.write(f"**Bairro:** {resposta['bairro']}")
+                st.write(f"**Cidade:** {resposta['localidade']}")
+                st.write(f"**Estado:** {resposta['uf']}")
             else:
-                st.error("Erro ao consultar API.")
+                st.error("CEP não encontrado.")
         else:
-            st.warning("Digite um CEP válido com 8 dígitos.")
+            st.error("Digite um CEP válido.")
 
-    with st.expander("📘 Explicação do Código"):
-        st.write("""
-        Este programa utiliza a API pública ViaCEP para consultar endereços.
-        Ele envia uma requisição HTTP e retorna os dados correspondentes.
+    if st.button("Ver explicação do código"):
+        st.info("""
+        O programa usa a API ViaCEP para consultar o endereço.
+        O usuário informa o CEP e o sistema faz uma requisição HTTP para retornar:
+        rua, bairro, cidade e estado.
         """)
 
-# ===================== DECISÃO E REPETIÇÃO =====================
-elif selecionado == "Decisão e Repetição":
-    st.title("Decisão e Repetição 🔁")
+# ==========================
+# DECISÃO E REPETIÇÃO
+# ==========================
 
-    qtd = st.number_input("Quantas sobrancelhas você irá atender hoje?", min_value=1, step=1)
+elif opcao == "Decisão e Repetição":
+    st.markdown('<h1 class="section-title">Exemplo: Decisão e Repetição 🔁</h1>', unsafe_allow_html=True)
 
-    if st.button("Calcular Tempo Total"):
-        tempo_por_cliente = 25
-        total = 0
-        for i in range(qtd):
-            total += tempo_por_cliente
+    numero = st.number_input("Digite um número:", min_value=0, step=1)
 
-        horas = total // 60
-        minutos = total % 60
+    if st.button("Mostrar contagem"):
+        st.write("Contando até o número escolhido:")
+        for i in range(numero + 1):
+            st.write(i)
 
-        st.success(f"Tempo total estimado: {horas}h {minutos}min")
-
-    with st.expander("📘 Explicação do Código"):
-        st.write("""
-        Este programa usa um laço **for** e uma estrutura de decisão para calcular tempo total.
+    if st.button("Ver explicação do código"):
+        st.info("""
+        Este programa demonstra estruturas básicas de decisão (if)
+        e repetição (for). Ele conta de 0 até o número informado pelo usuário.
         """)
 
-# ===================== RECURSIVIDADE =====================
-elif selecionado == "Recursividade":
-    st.title("Exemplo de Recursividade 🌀")
+# ==========================
+# RECURSIVIDADE
+# ==========================
 
-    n = st.number_input("Calcular fatorial de:", min_value=1, step=1)
+elif opcao == "Recursividade":
+    st.markdown('<h1 class="section-title">Exemplo de Recursividade 🧩</h1>', unsafe_allow_html=True)
 
-    def fatorial(x):
-        if x == 1:
+    def fatorial(n):
+        if n == 0:
             return 1
-        return x * fatorial(x - 1)
+        return n * fatorial(n - 1)
 
-    if st.button("Calcular Fatorial"):
-        st.success(f"Resultado: {fatorial(n)}")
+    num = st.number_input("Digite um número para calcular o fatorial:", min_value=0, step=1)
 
-    with st.expander("📘 Explicação do Código"):
-        st.write("""
-        A função chama a si mesma até chegar ao caso base.
-        Isso é recursividade.
+    if st.button("Calcular fatorial"):
+        st.success(f"O fatorial de {num} é **{fatorial(num)}**")
+
+    if st.button("Ver explicação do código"):
+        st.info("""
+        A função usa recursividade: ela chama ela mesma até chegar em 0.
         """)
 
-# ===================== API GENÉRICA =====================
-elif selecionado == "Acesso à API":
-    st.title("Consulta de API 🌐")
-    st.write("Exemplo: pegar um conselho aleatório em português.
+# ==========================
+# ACESSO À API
+# ==========================
 
-Aqui o programa realmente faz uma requisição para uma API que retorna conselhos em português. Quando o usuário clicar no botão, o Streamlit faz a chamada, recebe o conselho e exibe na tela.
+elif opcao == "Acesso à API":
+    st.markdown('<h1 class="section-title">Acesso à API ✨</h1>', unsafe_allow_html=True)
 
-```python
-import requests
-import streamlit as st
+    st.write("Clique no botão para receber um conselho aleatório em português:")
 
-st.subheader("✨ Conselho do Dia")
-
-if st.button("Gerar conselho"):
-    try:
-        resposta = requests.get("https://api.adviceslip.com/advice")
-
-        if resposta.status_code == 200:
+    if st.button("Gerar conselho"):
+        try:
+            # API de conselhos
+            resposta = requests.get("https://api.adviceslip.com/advice")
             conselho_en = resposta.json()["slip"]["advice"]
 
-            # Tradução automática simples usando MyMemory
+            # Traduzir para português
             traducao = requests.get(
                 f"https://api.mymemory.translated.net/get?q={conselho_en}&langpair=en|pt"
             )
             conselho_pt = traducao.json()["responseData"]["translatedText"]
 
             st.success(conselho_pt)
-        else:
-            st.error("Não foi possível obter um conselho agora. Tente novamente mais tarde.")
-    except:
-        st.error("Erro ao acessar a API.")
-```
+
+        except:
+            st.error("Erro ao acessar a API.")
+
+    if st.button("Ver explicação do código"):
+        st.info("""
+        O programa acessa uma API pública que retorna conselhos.
+        Como a API original está em inglês, o programa traduz automaticamente
+        o texto para português usando a API MyMemory.
+        """)
+
