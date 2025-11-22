@@ -3,9 +3,9 @@ import requests
 
 # Função para exibir o título e a explicação
 def exibir_titulo_e_explicacao():
-    st.title("🌸 Portfólio de Projetos 🎀")
-    st.write("Seja bem-vindo ao meu portfólio de projetos desenvolvidos durante meu curso de Sistemas de Informação! 💻")
-    st.write("Aqui, você encontrará alguns projetos que fiz com muito carinho e dedicação ao longo deste ano. 😊")
+    st.title("Portfólio Yasmin 🎀")
+    st.write("Seja bem-vindo ao meu portfólio de projetos desenvolvidos durante meu curso de Sistemas de Informação!")
+    st.write("Aqui, você encontrará alguns projetos que fiz com muito carinho e dedicação ao longo deste ano.")
 
 # Função para o projeto de "CEP"
 def programa_cep():
@@ -79,20 +79,20 @@ def main():
         <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f9f9f9;
+            background-color: #f5f5f5;  /* Fundo neutro claro */
             color: #333;
         }
         .stSidebar {
-            background-color: #FBE8E9;  /* Fundo suave rosado para a barra lateral */
+            background-color: #F9E6F7;  /* Fundo suave e delicado para a barra lateral */
         }
         .stTextInput, .stNumberInput, .stButton {
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 10px;
         }
         .stButton > button {
             background-color: #FFC0CB;  /* Rosa suave para os botões */
             color: white;
-            border-radius: 10px;
+            border-radius: 12px;
             font-weight: bold;
         }
         .stTextInput > div > input {
@@ -102,7 +102,7 @@ def main():
             color: #555;
         }
         h1, h2, h3 {
-            color: #D47F7F;
+            color: #F1A7C4;  /* Tom suave de rosa para os títulos */
         }
         </style>
     """, unsafe_allow_html=True)
@@ -125,4 +125,8 @@ def main():
     elif escolha == "Recursividade":
         programa_recursividade()
     elif escolha == "Acesso a API":
-        programa
+        programa_acesso_api()
+
+# Chama a função principal para executar o app
+if __name__ == "__main__":
+    main()
