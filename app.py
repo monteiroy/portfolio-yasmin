@@ -7,7 +7,7 @@ st.set_page_config(page_title="Portfólio Yasmin Monteiro", layout="wide")
 # Cores
 COR_DETALHE = "#FFC0CB"  # Rosa claro para detalhes
 COR_AREA = "#FFFFFF"      # Branco para área principal
-COR_TEXTOS = "#000000"     # Preto para textos
+COR_TEXTOS = "#000000"    # Preto para textos
 
 st.markdown(f"""
 <style>
@@ -59,8 +59,12 @@ if opcao == "Sobre Mim":
     st.title("🎀 Sobre Mim")
     st.write("""
     Olá! Me chamo **Yasmin Monteiro**, tenho **19 anos** e atualmente curso a graduação de **Sistemas de Informação**.
+    
     Tenho grande interesse na área de **Backend**, desenvolvendo soluções eficientes e escaláveis para aplicações web.
-    Ao longo do meu curso, participei de projetos variados que envolvem lógica de programação, consumo de APIs e desenvolvimento de funcionalidades interativas, aqui neste portfólio, você poderá conhecer alguns dos meus projetos desenvolvidos com dedicação e atenção aos detalhes.
+    
+    Ao longo do meu curso, participei de projetos variados que envolvem lógica de programação, consumo de APIs e desenvolvimento de funcionalidades interativas.
+    
+    Aqui neste portfólio, você poderá conhecer alguns dos meus projetos desenvolvidos com dedicação e atenção aos detalhes.
     """)
 
 elif opcao == "Programa Dólar":
@@ -158,5 +162,5 @@ elif opcao == "Outros Projetos":
 
     Para visualizar melhor o projeto, clique no botão **Avançar** dentro da tela do Figma.
     """)
-    st.markdown("[🔗 Acessar Projeto Figma](https://www.figma.com/proto/m14L5GmZzywpkPvbSaaGBi/Untitled?node-id=1-5&p=f&t=3hRZBswpKW5gZVUp-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A5")
+    st.markdown("[🔗 Acessar Projeto Figma](https://www.figma.com/proto/m14L5GmZzywpkPvbSaaGBi/Untitled?node-id=1-5&p=f&t=3hRZBswpKW5gZVUp-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A5)")
     st.markdown('</div>', unsafe_allow_html=True)
