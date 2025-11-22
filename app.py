@@ -5,7 +5,7 @@ import requests
 st.set_page_config(page_title="Portifolio Yasmin Monteiro", layout="wide")
 
 COR_PRINCIPAL = "#FFDAB9"
-COR_LATERAL = "#FFE4E1"  # Fundo da área de seleção
+COR_LATERAL = "#FFE4E1"
 COR_TEXTO = "#FFFFFF"
 
 # ==================== ESTILO CSS ====================
@@ -35,7 +35,7 @@ h1, h2, h3 {{
 """, unsafe_allow_html=True)
 
 # ==================== SIDEBAR ====================
-st.sidebar.title("🌸 Navegação")
+st.sidebar.title("📚 Projetos")
 opcao = st.sidebar.radio(
     "Escolha uma opção:",
     ["Sobre Mim", "Programa Dólar", "Consultar CEP", "Decisão e Repetição", "Recursividade", "Acesso à API"]
@@ -130,7 +130,7 @@ elif opcao == "Recursividade":
 
 # ==================== ACESSO A API ====================
 elif opcao == "Acesso à API":
-    st.title("🌐 Acesso a API")
+    st.title("🌐 Acesso a API — Conselho Aleatório em Português")
 
     if st.button("Gerar conselho"):
         try:
