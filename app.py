@@ -43,7 +43,7 @@ if opcao == "Sobre Mim":
         """
         Oie, seja muito bem-vindo(a)!
 
-        Me chamo Yasmin, e atualmente curso a graduação de Sistemas de Informação.
+        Me chamo Yasmin**, e atualmente curso a graduação de Sistemas de Informação.
         Aqui você encontrará alguns dos meus projetos desenvolvidos ao longo deste ano,
         com muito carinho e dedicação.
         """
