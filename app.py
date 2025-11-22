@@ -1,24 +1,25 @@
 import streamlit as st
+import requests
 
 # ==================== CONFIGURAÇÕES ====================
 st.set_page_config(page_title="Portfólio Yasmin Monteiro", layout="wide")
 
 # Cores
-COR_PRINCIPAL = "#FFDAB9"
-COR_LATERAL = "#FFE4E1"
-COR_TEXTO = "#000000"  # melhor contraste com fundo claro
+COR_SIDEBAR = "#FFE4E1"  # rosa para sidebar
+COR_FUNDO = "#FFFFFF"     # branco para área principal
+COR_TEXTO = "#000000"     # preto para textos, melhor contraste
 
 # ==================== ESTILO CSS ====================
 st.markdown(f"""
 <style>
-/* Fundo geral */
+/* Fundo geral da página principal */
 html, body, .stApp {{
-    background-color: {COR_LATERAL} !important;
+    background-color: {COR_FUNDO} !important;
 }}
 
-/* Área lateral */
+/* Fundo da sidebar */
 .sidebar .sidebar-content {{
-    background-color: {COR_LATERAL} !important;
+    background-color: {COR_SIDEBAR} !important;
 }}
 
 /* Títulos e textos */
@@ -58,13 +59,12 @@ elif opcao == "Programa Dólar":
     with st.expander("📘 Explicação do Código"):
         st.write("O conversor multiplica o valor digitado pela cotação fixa (5.60) e exibe o resultado.")
 
-# ==================== CONSULTAR CEP (Exemplo) ====================
+# ==================== CONSULTAR CEP ====================
 elif opcao == "Consultar CEP":
     st.title("🏠 Consultar CEP")
     cep = st.text_input("Digite o CEP (somente números):")
     if st.button("Buscar"):
         if cep:
-            import requests
             response = requests.get(f"https://viacep.com.br/ws/{cep}/json/")
             if response.status_code == 200:
                 data = response.json()
