@@ -158,5 +158,5 @@ elif opcao == "Outros Projetos":
 
     Para visualizar melhor o projeto, clique no botão **Avançar** dentro da tela do Figma.
     """)
-    st.markdown("[🔗 Acessar Projeto Figma](https://www.figma.com/proto/m14L5GmZzywpkPvbSaaGBi/Untitled?node-id=84-481&p=f&t=3hRZBswpKW5gZVUp-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A5)")
+    st.markdown("[🔗 Acessar Projeto Figma](https://www.figma.com/proto/m14L5GmZzywpkPvbSaaGBi/Untitled?node-id=1-5&p=f&t=3hRZBswpKW5gZVUp-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=1%3A5")
     st.markdown('</div>', unsafe_allow_html=True)
