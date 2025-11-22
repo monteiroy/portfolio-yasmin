@@ -3,9 +3,9 @@ import requests
 
 # Função para exibir o título e a explicação
 def exibir_titulo_e_explicacao():
-    st.title("🌸 Portfólio de Projetos 🎀")
-    st.write("Seja bem-vindo ao meu portfólio de projetos desenvolvidos durante meu curso de Sistemas de Informação! 💻")
-    st.write("Aqui, você encontrará alguns projetos que fiz com muito carinho e dedicação ao longo deste ano. 😊")
+    st.title("Portfólio Yasmin 🎀")
+    st.write("Oie, seja bem-vindo(a) ao meu portfólio de projetos desenvolvidos durante minha graduação em Sistemas de Informação, ao longo deste ano.")
+ 
 
 # Função para o projeto de "Consultar CEP"
 def programa_consultar_cep():
