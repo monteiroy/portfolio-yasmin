@@ -1,161 +1,170 @@
 import streamlit as st
+import requests
 
-# ======================== CONFIGURAÇÕES ========================
-st.set_page_config(
-    page_title="Portfólio Yasmin",
-    layout="wide",
-)
+# =========================
+# 🎨 ESTILO PERSONALIZADO
+# =========================
 
-# Cor do menu lateral (um tom mais escuro do #FFDAB9)
-sidebar_color = "#F4C8A4"
-
-# CSS para estilização
 st.markdown(
-    f"""
+    """
     <style>
-        /* Cor do sidebar */
-        section[data-testid="stSidebar"] {{
-            background-color: {sidebar_color} !important;
-        }}
-
+        /* Sidebar */
+        [data-testid="stSidebar"] {
+            background-color: #f5c6a6; /* #FFDAB9 um pouco mais escuro */
+        }
         /* Títulos */
-        h1, h2, h3, h4 {{
-            color: #000000 !important;
-        }}
-
-        /* Texto branco */
-        .white-text {{
+        h1, h2, h3, h4, h5, h6, p {
             color: white !important;
-        }}
-
-        /* Botões personalizados */
-        .stButton>button {{
+        } 
+        .stButton>button {
             background-color: #FFDAB9;
-            color: black;
-            border-radius: 8px;
-            padding: 8px 20px;
+            color: white;
+            border-radius: 10px;
             border: none;
-        }}
-        .stButton>button:hover {{
-            background-color: #f7c6a5;
-        }}
+        }
+        .stButton>button:hover {
+            background-color: #f7b48b;
+            color: white;
+        }
     </style>
     """,
-    unsafe_allow_html=True,
+    unsafe_allow_html=True
 )
 
-# ======================== MENU LATERAL =========================
-
-st.sidebar.title("🌸 Navegação")
-projeto = st.sidebar.selectbox(
-    "Escolha um projeto:",
-    ["Início", "Dólar", "CEP", "Decisão e Repetição", "Recursividade", "API Externa"],
+# =========================
+# 🌸 SIDEBAR
+# =========================
+st.sidebar.title("🌸 Meu Portfólio")
+pag = st.sidebar.radio(
+    "Selecione um projeto:",
+    [
+        "🌸 Programa Dólar",
+        "📍 Consulta CEP",
+        "🔁 Decisão e Repetição",
+        "🌀 Recursividade"
+    ]
 )
 
+# =========================
+# 🌸 PROGRAMA 1 – DÓLAR
+# =========================
+if pag == "🌸 Programa Dólar":
+    st.title("🌸 Conversor de Moeda — Real para Dólar")
 
-# ======================== PÁGINAS ===============================
-
-# ----------- PÁGINA INICIAL -----------
-if projeto == "Início":
-    st.title("✨ Portfólio Yasmin")
-    st.write("Bem-vindo(a)! Aqui estão alguns dos meus projetos de programação:")
-    st.markdown("""
-    - 🌿 Estruturas de decisão e repetição  
-    - 🌸 Recursividade  
-    - 🌙 Consumo de APIs externas  
-    - ⭐ Processamentos eficientes  
-    """)
-
-
-# ----------- PROGRAMA DO DÓLAR -----------
-elif projeto == "Dólar":
-    st.title("💱 Conversor de Dólar")
-
-    valor = st.number_input("Digite um valor em dólar (US$):", min_value=0.0)
+    valor = st.text_input("Digite o valor em **R$**:")
 
     if st.button("Converter"):
-        convertido = valor * 5.50
-        st.success(f"💰 **Valor em reais: R$ {convertido:,.2f}**")
+        try:
+            valor = valor.replace("R$", "").replace(",", ".").strip()
+            valor_float = float(valor)
 
-    # Botão para explicação do código
-    if st.button("📘 Ver explicação do código"):
-        st.info("""
-        Este programa multiplica o valor em dólar por uma taxa fixa (5.50).  
-        Ele usa:
-        - `number_input` para digitar valores  
-        - Uma conta simples `valor * 5.50`  
-        - `st.success` para mostrar o resultado formatado com R$  
-        """)
+            # Cotação API
+            r = requests.get("https://economia.awesomeapi.com.br/json/last/USD-BRL")
+            cotacao = float(r.json()["USDBRL"]["bid"])
+            resultado = valor_float / cotacao
 
+            st.success(f"💰 Resultado: **US$ {resultado:.2f}**")
 
-# ----------- PROGRAMA DE CEP -----------
-elif projeto == "CEP":
-    st.title("📮 Consulta de CEP")
-
-    cep = st.text_input("Digite o CEP:")
-
-    if st.button("Buscar CEP"):
-        st.write("🔎 *Aqui entraria o código de consulta de API real*")
+        except:
+            st.error("Digite um valor válido!")
 
     if st.button("📘 Ver explicação do código"):
-        st.info("""
-        O programa usa uma API (ViaCEP) para buscar informações de endereço.  
-        - Envia requisição HTTP  
-        - Recebe JSON  
-        - Exibe rua, bairro e cidade  
-        """)
+        st.info(
+            """
+            **Explicação:**
+            - O usuário digita um valor em reais.
+            - Removemos "R$" e convertemos para número.
+            - Usamos uma API real de cotação do dólar.
+            - Dividimos o valor pela cotação atual.
+            """
+        )
 
+# =========================
+# 🌸 PROGRAMA 2 – CEP
+# =========================
+elif pag == "📍 Consulta CEP":
+    st.title("📍 Consulta de Endereço via CEP")
 
-# ----------- DECISÃO E REPETIÇÃO -----------
-elif projeto == "Decisão e Repetição":
-    st.title("🔁 Estruturas de Decisão e Repetição")
+    cep = st.text_input("Digite o CEP (somente números):")
 
-    numero = st.number_input("Digite um número:", value=0)
+    if st.button("Consultar CEP"):
+        try:
+            resposta = requests.get(f"https://viacep.com.br/ws/{cep}/json/").json()
 
-    if st.button("Processar"):
-        if numero % 2 == 0:
-            st.success("✨ O número é **par**")
-        else:
-            st.error("🌙 O número é **ímpar**")
+            if "erro" in resposta:
+                st.error("CEP não encontrado.")
+            else:
+                st.success("Endereço encontrado:")
+                st.write(f"📍 **Rua:** {resposta['logradouro']}")
+                st.write(f"🏙️ **Bairro:** {resposta['bairro']}")
+                st.write(f"🏘️ **Cidade:** {resposta['localidade']}")
+                st.write(f"🗺️ **Estado:** {resposta['uf']}")
 
-    if st.button("📘 Ver explicação do código"):
-        st.info("""
-        Este código demonstra:
-        - Uso de `if` e `else`  
-        - Identificação de número par/ímpar  
-        - Entrada numérica com `number_input`  
-        """)
-
-
-# ----------- RECURSIVIDADE -----------
-elif projeto == "Recursividade":
-    st.title("🌿 Recursividade — Fatorial")
-
-    n = st.number_input("Digite um número para calcular o fatorial:", min_value=0, value=1)
-
-    def fatorial(x):
-        return 1 if x <= 1 else x * fatorial(x - 1)
-
-    if st.button("Calcular"):
-        st.success(f"🌸 Resultado: **{fatorial(n)}**")
+        except:
+            st.error("Erro ao consultar o CEP.")
 
     if st.button("📘 Ver explicação do código"):
-        st.info("""
-        A função chama ela mesma até chegar ao valor 1.  
-        Exemplo:
-        f(5) → 5 * 4 * 3 * 2 * 1  
-        """)
+        st.info(
+            """
+            **Explicação:**
+            - Recebemos o CEP digitado pelo usuário.
+            - Chamamos a API **ViaCEP**.
+            - Se o CEP existir, exibimos o endereço completo.
+            """
+        )
 
+# =========================
+# 🌸 PROGRAMA 3 – DECISÃO E REPETIÇÃO
+# =========================
+elif pag == "🔁 Decisão e Repetição":
+    st.title("🔁 Tempo total de atendimentos — Sobrancelhas")
 
-# ----------- API EXTERNA -----------
-elif projeto == "API Externa":
-    st.title("🌐 Consumo de API Externa")
+    qtd = st.number_input("Quantas clientes serão atendidas hoje?", min_value=1)
 
-    st.write("Aqui seria exibido o retorno de uma API real.")
+    if st.button("Calcular tempo total"):
+        TEMPO = 25  # minutos
+
+        total = 0
+        for i in range(int(qtd)):
+            total += TEMPO
+
+        horas = total // 60
+        minutos = total % 60
+
+        st.success(f"⏱ Tempo total: **{horas}h {minutos}min**")
 
     if st.button("📘 Ver explicação do código"):
-        st.info("""
-        - Uso da biblioteca `requests`  
-        - A API devolve dados em JSON  
-        - O programa transforma e exibe os dados  
-        """)
+        st.info(
+            """
+            **Explicação:**
+            - Usamos um `for` para repetir o tempo de cada atendimento.
+            - Cada atendimento dura 25 minutos.
+            - Somamos todos e exibimos o tempo total formatado.
+            """
+        )
+
+# =========================
+# 🌸 PROGRAMA 4 – RECURSIVIDADE
+# =========================
+elif pag == "🌀 Recursividade":
+    st.title("🌀 Fatorial com Recursividade")
+
+    def fatorial(n):
+        if n <= 1:
+            return 1
+        return n * fatorial(n - 1)
+
+    num = st.number_input("Digite um número:", min_value=0, step=1)
+
+    if st.button("Calcular fatorial"):
+        st.success(f"Resultado: **{fatorial(int(num))}**")
+
+    if st.button("📘 Ver explicação do código"):
+        st.info(
+            """
+            **Explicação:**
+            - A função chama ela mesma (`fatorial(n - 1)`).
+            - Quando chega em 1, para.
+            - Multiplica todos valores até chegar ao número desejado.
+            """
+        )
