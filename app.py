@@ -40,8 +40,12 @@ opcao = st.sidebar.radio(
 if opcao == "Sobre Mim":
     st.title("🎀 Sobre Mim")
     st.write(
-        """
-        Oie, seja muito bem-vindo(a)!
+    """
+    O conversor recebe o valor digitado em dólar,
+    multiplica pela cotação fixa de 5.60
+    e exibe o valor final em reais.
+    """
+)!
 
         Me chamo **Yasmin**, e atualmente curso a graduação de **Sistemas de Informação**.
         Aqui você encontrará alguns dos meus projetos desenvolvidos ao longo deste ano,
@@ -60,7 +64,7 @@ elif opcao == "Programa Dólar":
         resultado = valor * cotacao
         st.success(f"Valor convertido: **R$ {resultado:.2f}**")
 
-    with st.expander("📘 Explicação do Código"):
+    with st.expander("📘 Explicação do Código")::
         st.write(
             "O conversor multiplica o valor digitado pela cotação fixa (5.60) e exibe o resultado."
         ) e mostra o resultado.
