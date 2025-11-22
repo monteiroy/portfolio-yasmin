@@ -1,150 +1,154 @@
 import streamlit as st
-import requests
 
-# =========================
-# CONFIGURAÇÃO DO SITE
-# =========================
+# ======================
+# CONFIGURAÇÃO DO APP
+# ======================
 st.set_page_config(
-    page_title="Portfólio",
+    page_title="Portfólio – Yasmin",
     layout="wide"
 )
 
-# =========================
-# ESTILO PERSONALIZADO
-# =========================
-st.markdown(f"""
+# ======================
+# ESTILO DA PÁGINA
+# ======================
+st.markdown(
+    f"""
     <style>
         body {{
             background-color: #FFDAB9 !important;
         }}
-        .main {{
-            background-color: #FFDAB9 !important;
+
+        .stApp {{
+            background-color: #FFDAB9;
         }}
-        h1, h2, h3, p, label, span {{
+
+        h1, h2, h3, h4, h5, h6, p, li, span, label {{
             color: white !important;
         }}
-        .stButton>button {{
-            background-color: white;
-            color: #FFDAB9;
-            border-radius: 10px;
-            padding: 8px 20px;
-            font-weight: bold;
+
+        .css-10trblm, .css-1v0mbdj {{
+            color: white !important;
         }}
-        .stTextInput>div>div>input {{
-            background-color: white !important;
-            color: black !important;
+
+        .sidebar .sidebar-content {{
+            background-color: #f5c6a5 !important;
+        }}
+
+        .stSelectbox label {{
+            color: white !important;
         }}
     </style>
-""", unsafe_allow_html=True)
-
-# =========================
-# CABEÇALHO
-# =========================
-st.markdown("<h1 style='text-align:center;'>Portfólio de Projetos — Python</h1>", unsafe_allow_html=True)
-st.markdown("<h3 style='text-align:center;'>Projetos acadêmicos desenvolvidos em Python</h3>", unsafe_allow_html=True)
-
-st.write("---")
-
-# =========================
-# MENU LATERAL
-# =========================
-menu = st.sidebar.selectbox(
-    "Escolha um projeto:",
-    ["Início", "Programa do Dólar", "Consulta CEP (API)", "Decisão e Repetição", "Recursividade", "Uso de API Externa"]
+    """,
+    unsafe_allow_html=True
 )
 
-# =========================
-# PÁGINA INICIAL
-# =========================
-if menu == "Início":
-    st.header("Bem-vindo(a) ao meu portfólio!")
-    st.write("""
-        Aqui você encontra projetos acadêmicos em Python, incluindo:
-        - Estruturas de decisão e repetição  
-        - Recursividade  
-        - Consumo de APIs externas  
-        - Processamentos simples e eficientes  
+# ======================
+# SIDEBAR
+# ======================
+st.sidebar.title("Escolha um projeto:")
+
+opcao = st.sidebar.selectbox(
+    "",
+    ["Início", "Dólar (conversão)", "Consulta CEP", "Decisão e Repetição", "Recursividade", "Acesso a API"]
+)
+
+
+# ======================
+# CONTEÚDOS DAS PÁGINAS
+# ======================
+
+# INICIO
+if opcao == "Início":
+    st.title("Bem-vindo ao meu Portfólio 👋")
+    st.subheader("Aqui você encontra alguns dos meus projetos desenvolvidos em Python.")
+    
+    st.markdown("""
+    ### 🔸 Projetos disponíveis:
+    - Estruturas de decisão e repetição  
+    - Recursividade  
+    - Consumo de APIs externas  
+    - Processamentos simples e eficientes  
     """)
 
-# =========================
-# PROJETO 1 - Programa do Dólar
-# =========================
-elif menu == "Programa do Dólar":
-    st.header("Conversor de Moeda (Dólar → Real)")
+# DÓLAR
+elif opcao == "Dólar (conversão)":
+    st.title("💲 Conversor de Dólar")
 
-    dolar = st.number_input("Digite o valor em dólares:", min_value=0.0)
-    cotacao = 5.72
+    valor = st.number_input("Digite o valor em reais (R$):", min_value=0.0, step=0.5)
 
-    if st.button("Converter"):
-        resultado = dolar * cotacao
-        st.success(f"US$ {dolar:.2f} equivalem a R$ {resultado:.2f}")
+    cotacao = 5.65  # exemplo
+    convertido = valor / cotacao
 
-# =========================
-# PROJETO 2 - Consulta CEP (API ViaCEP)
-# =========================
-elif menu == "Consulta CEP (API)":
-    st.header("Consulta de CEP — ViaCEP")
+    st.write(f"Com R$ {valor:.2f}, você compra **US$ {convertido:.2f}**")
 
-    cep = st.text_input("Digite um CEP (somente números):")
+# CEP
+elif opcao == "Consulta CEP":
+    st.title("📍 Consulta CEP via API")
 
-    if st.button("Consultar CEP"):
-        if len(cep) == 8:
-            url = f"https://viacep.com.br/ws/{cep}/json/"
-            resposta = requests.get(url).json()
+    cep = st.text_input("Digite o CEP:")
 
-            if "erro" not in resposta:
-                st.write("### Resultado:")
-                st.write(resposta)
+    if st.button("Consultar"):
+        import requests
+
+        try:
+            r = requests.get(f"https://viacep.com.br/ws/{cep}/json/")
+            dados = r.json()
+
+            if "erro" in dados:
+                st.error("CEP não encontrado.")
             else:
-                st.error("CEP inválido!")
-        else:
-            st.error("Digite um CEP com 8 dígitos!")
+                st.write("### Resultado:")
+                st.json(dados)
 
-# =========================
-# PROJETO 3 - Decisão e Repetição
-# =========================
-elif menu == "Decisão e Repetição":
-    st.header("Cálculo de Tempo de Atendimentos — Decisão e Repetição")
+        except:
+            st.error("Erro ao consultar API.")
 
-    qtd = st.number_input("Quantidade de atendimentos:", min_value=1, step=1)
-    tempo_por_cliente = 25
+# DECISÃO E REPETIÇÃO
+elif opcao == "Decisão e Repetição":
+    st.title("🔁 Estruturas de Decisão e Repetição")
 
-    if st.button("Calcular Tempo Total"):
-        total = 0
-        for i in range(1, qtd + 1):
-            st.write(f"Atendimento {i}: {tempo_por_cliente} minutos")
-            total += tempo_por_cliente
+    st.markdown("""
+    Este projeto demonstra:
+    - Uso de condicionais (`if`, `elif`, `else`)
+    - Laços (`for`, `while`)
+    """)
 
-        horas = total // 60
-        minutos = total % 60
+    numero = st.number_input("Digite um número:", step=1)
 
-        st.success(f"Tempo total: {horas}h {minutos}min")
+    st.write(f"Tabuada do {numero}:")
+    for i in range(1, 11):
+        st.write(f"{numero} x {i} = {numero * i}")
 
-# =========================
-# PROJETO 4 - Recursividade
-# =========================
-elif menu == "Recursividade":
-    st.header("Cálculo Fatorial — Recursividade")
+# RECURSIVIDADE
+elif opcao == "Recursividade":
+    st.title("🌀 Recursividade")
 
+    st.markdown("Exemplo: cálculo fatorial usando função recursiva.")
+    
     def fatorial(n):
-        if n == 0 or n == 1:
+        if n == 0:
             return 1
         return n * fatorial(n - 1)
 
-    numero = st.number_input("Digite um número inteiro:", min_value=0, step=1)
+    n = st.number_input("Número para calcular fatorial:", min_value=0, step=1)
 
-    if st.button("Calcular Fatorial"):
-        st.success(f"Resultado: {fatorial(numero)}")
+    if st.button("Calcular"):
+        st.write(f"Fatorial de {n} é **{fatorial(n)}**")
 
-# =========================
-# PROJETO 5 - API de Cotação Atual
-# =========================
-elif menu == "Uso de API Externa":
-    st.header("Cotação Atual do Dólar — API AwesomeAPI")
+# ACESSO A API
+elif opcao == "Acesso a API":
+    st.title("🌐 Acesso a API Externa")
 
-    url = "https://economia.awesomeapi.com.br/json/last/USD-BRL"
+    st.markdown("Exemplo: consulta ao preço atual do Bitcoin.")
 
-    if st.button("Obter Cotação Atual"):
-        dados = requests.get(url).json()
-        cotacao = float(dados["USDBRL"]["bid"])
-        st.success(f"Cotação atual do dólar: R$ {cotacao:.2f}")
+    import requests
+
+    try:
+        preco = requests.get("https://api.coindesk.com/v1/bpi/currentprice.json").json()
+        valor = preco["bpi"]["USD"]["rate"]
+
+        st.write(f"Preço atual do Bitcoin: **US$ {valor}**")
+
+    except:
+        st.error("Erro ao acessar API.")
+
