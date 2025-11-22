@@ -147,17 +147,32 @@ elif selecionado == "Recursividade":
 # ===================== API GENÉRICA =====================
 elif selecionado == "Acesso à API":
     st.title("Consulta de API 🌐")
-    st.write("Exemplo: pegar um conselho aleatório em português.")
+    st.write("Exemplo: pegar um conselho aleatório em português.
 
-    if st.button("Gerar conselho"):
-        r = requests.get("https://api.adviceslip.com/advice")  # API em inglês, mas exibiremos texto em português
-        if r.status_code == 200:
-            dado = r.json()
-            st.success(dado["slip"]["advice"])
+Aqui o programa realmente faz uma requisição para uma API que retorna conselhos em português. Quando o usuário clicar no botão, o Streamlit faz a chamada, recebe o conselho e exibe na tela.
+
+```python
+import requests
+import streamlit as st
+
+st.subheader("✨ Conselho do Dia")
+
+if st.button("Gerar conselho"):
+    try:
+        resposta = requests.get("https://api.adviceslip.com/advice")
+
+        if resposta.status_code == 200:
+            conselho_en = resposta.json()["slip"]["advice"]
+
+            # Tradução automática simples usando MyMemory
+            traducao = requests.get(
+                f"https://api.mymemory.translated.net/get?q={conselho_en}&langpair=en|pt"
+            )
+            conselho_pt = traducao.json()["responseData"]["translatedText"]
+
+            st.success(conselho_pt)
         else:
-            st.error("Erro ao acessar API.")
-
-    with st.expander("📘 Explicação do Código"):
-        st.write("""
-        Este programa faz uma requisição HTTP e exibe a mensagem retornada.
-        """)
+            st.error("Não foi possível obter um conselho agora. Tente novamente mais tarde.")
+    except:
+        st.error("Erro ao acessar a API.")
+```
