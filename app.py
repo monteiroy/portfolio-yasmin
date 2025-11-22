@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import pandas as pd
 
 st.set_page_config(page_title="Portfólio Yasmin Monteiro", layout="wide")
 
@@ -47,9 +48,13 @@ opcao = st.sidebar.radio(
 if opcao == "Sobre Mim":
     st.title("🎀 Sobre Mim")
     st.write("""
-    Me chamo **Yasmin**, e atualmente curso a graduação de **Sistemas de Informação**.
-    Aqui você encontrará alguns dos meus projetos desenvolvidos ao longo deste ano,
-    com muito carinho e dedicação.
+    Olá! Me chamo **Yasmin Monteiro**, tenho **19 anos** e atualmente curso a graduação de **Sistemas de Informação**.
+    
+    Tenho grande interesse na área de **Backend**, desenvolvendo soluções eficientes e escaláveis para aplicações web.
+    
+    Ao longo do meu curso, participei de projetos variados que envolvem lógica de programação, consumo de APIs e desenvolvimento de funcionalidades interativas.
+    
+    Aqui neste portfólio, você poderá conhecer alguns dos meus projetos desenvolvidos com dedicação e atenção aos detalhes.
     """)
 
 elif opcao == "Programa Dólar":
@@ -109,17 +114,21 @@ elif opcao == "Recursividade":
 
 elif opcao == "Acesso à API":
     st.title("🌐 Acesso à API")
-    nome_input = st.text_input("Digite um nome para consultar:", "Yasmin")
+    st.write("Consulta de idade estimada pelo nome usando a API Agify.")
+    nome_input = st.text_input("Digite o nome para consultar:", "")
+    
     if st.button("Consultar API"):
-        try:
-            response = requests.get(f"https://api.agify.io?name={nome_input}")
-            response.raise_for_status()
-            data = response.json()
-            st.subheader("📌 Resultado da API:")
-            st.write(f"Nome: {data.get('name')}")
-            st.write(f"Idade estimada: {data.get('age')}")
-            st.write(f"Contagem de registros: {data.get('count')}")
-        except requests.RequestException:
-            st.error("Falha ao acessar a API")
+        if nome_input.strip() != "":
+            try:
+                response = requests.get(f"https://api.agify.io?name={nome_input}")
+                response.raise_for_status()
+                data = response.json()
+                df = pd.DataFrame([data])
+                st.subheader("📌 Resultado da API:")
+                st.table(df.rename(columns={"name": "Nome", "age": "Idade Estimada", "count": "Contagem de Registros"}))
+            except requests.RequestException:
+                st.error("Falha ao acessar a API")
+        else:
+            st.warning("Digite um nome válido")
     with st.expander("📘 Explicação do Projeto"):
-        st.write("Consulta a idade estimada de um nome usando a API Agify.")
+        st.write("Consulta a idade estimada de um nome usando a API Agify e exibe o resultado em tabela.")
