@@ -56,14 +56,19 @@ elif opcao == "Programa Dólar":
         resultado = valor * cotacao
         st.success(f"Valor convertido: **R$ {resultado:.2f}**")
 
-    with st.expander("📘 Explicação do Código"):
-        st.write("O conversor multiplica o valor digitado pela cotação fixa (5.60) e exibe o resultado.")
+    with st.expander("📘 Explicação do Projeto"):
+        st.write("""
+        Este programa recebe um valor em dólar digitado pelo usuário,
+        multiplica pela cotação fixa de 5.60 e exibe o valor convertido em reais.
+        É um exemplo simples de interação com o usuário e cálculo em Python.
+        """)
 
 # ==================== CONSULTAR CEP ====================
 elif opcao == "Consultar CEP":
     st.title("🏠 Consultar CEP")
     cep = st.text_input("Digite o CEP (somente números):")
-    if st.button("Buscar"):
+
+    if st.button("Buscar CEP"):
         if cep:
             response = requests.get(f"https://viacep.com.br/ws/{cep}/json/")
             if response.status_code == 200:
@@ -71,42 +76,23 @@ elif opcao == "Consultar CEP":
                 if "erro" in data:
                     st.error("CEP não encontrado!")
                 else:
-                    st.write(data)
+                    st.subheader("📌 Resultado:")
+                    st.write(f"**CEP:** {data.get('cep','')}")
+                    st.write(f"**Logradouro:** {data.get('logradouro','')}")
+                    st.write(f"**Complemento:** {data.get('complemento','')}")
+                    st.write(f"**Bairro:** {data.get('bairro','')}")
+                    st.write(f"**Cidade:** {data.get('localidade','')}")
+                    st.write(f"**Estado:** {data.get('uf','')}")
             else:
                 st.error("Erro na requisição da API")
         else:
             st.warning("Digite um CEP válido")
 
+    with st.expander("📘 Explicação do Projeto"):
+        st.write("""
+        Este projeto consulta um CEP digitado pelo usuário utilizando a API pública ViaCEP.
+        Retorna informações detalhadas como logradouro, bairro, cidade e estado.
+        """)
+
 # ==================== DECISÃO E REPETIÇÃO ====================
-elif opcao == "Decisão e Repetição":
-    st.title("🔁 Estruturas de Decisão e Repetição")
-    st.write("Exemplo de loop e condição em Python:")
-    for i in range(1, 6):
-        if i % 2 == 0:
-            st.write(f"{i} é par")
-        else:
-            st.write(f"{i} é ímpar")
-
-# ==================== RECURSIVIDADE ====================
-elif opcao == "Recursividade":
-    st.title("🔄 Função Recursiva")
-    st.write("Exemplo de cálculo de fatorial usando recursão:")
-    
-    def fatorial(n):
-        return 1 if n == 0 else n * fatorial(n-1)
-    
-    numero = st.number_input("Digite um número:", min_value=0, step=1)
-    if st.button("Calcular Fatorial"):
-        st.success(f"O fatorial de {numero} é {fatorial(numero)}")
-
-# ==================== ACESSO À API ====================
-elif opcao == "Acesso à API":
-    st.title("🌐 Acesso à API")
-    st.write("Exemplo de requisição simples a uma API pública")
-    
-    if st.button("Testar API"):
-        response = requests.get("https://api.agify.io?name=Yasmin")
-        if response.status_code == 200:
-            st.json(response.json())
-        else:
-            st.error("Falha ao acessar a API")
+el
