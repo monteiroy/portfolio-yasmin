@@ -1,154 +1,161 @@
 import streamlit as st
 
-# ======================
-# CONFIGURAÇÃO DO APP
-# ======================
+# ======================== CONFIGURAÇÕES ========================
 st.set_page_config(
-    page_title="Portfólio – Yasmin",
-    layout="wide"
+    page_title="Portfólio Yasmin",
+    layout="wide",
 )
 
-# ======================
-# ESTILO DA PÁGINA
-# ======================
+# Cor do menu lateral (um tom mais escuro do #FFDAB9)
+sidebar_color = "#F4C8A4"
+
+# CSS para estilização
 st.markdown(
     f"""
     <style>
-        body {{
-            background-color: #FFDAB9 !important;
+        /* Cor do sidebar */
+        section[data-testid="stSidebar"] {{
+            background-color: {sidebar_color} !important;
         }}
 
-        .stApp {{
+        /* Títulos */
+        h1, h2, h3, h4 {{
+            color: #000000 !important;
+        }}
+
+        /* Texto branco */
+        .white-text {{
+            color: white !important;
+        }}
+
+        /* Botões personalizados */
+        .stButton>button {{
             background-color: #FFDAB9;
+            color: black;
+            border-radius: 8px;
+            padding: 8px 20px;
+            border: none;
         }}
-
-        h1, h2, h3, h4, h5, h6, p, li, span, label {{
-            color: white !important;
-        }}
-
-        .css-10trblm, .css-1v0mbdj {{
-            color: white !important;
-        }}
-
-        .sidebar .sidebar-content {{
-            background-color: #f5c6a5 !important;
-        }}
-
-        .stSelectbox label {{
-            color: white !important;
+        .stButton>button:hover {{
+            background-color: #f7c6a5;
         }}
     </style>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
-# ======================
-# SIDEBAR
-# ======================
-st.sidebar.title("Escolha um projeto:")
+# ======================== MENU LATERAL =========================
 
-opcao = st.sidebar.selectbox(
-    "",
-    ["Início", "Dólar (conversão)", "Consulta CEP", "Decisão e Repetição", "Recursividade", "Acesso a API"]
+st.sidebar.title("🌸 Navegação")
+projeto = st.sidebar.selectbox(
+    "Escolha um projeto:",
+    ["Início", "Dólar", "CEP", "Decisão e Repetição", "Recursividade", "API Externa"],
 )
 
 
-# ======================
-# CONTEÚDOS DAS PÁGINAS
-# ======================
+# ======================== PÁGINAS ===============================
 
-# INICIO
-if opcao == "Início":
-    st.title("Bem-vindo ao meu Portfólio 👋")
-    st.subheader("Aqui você encontra alguns dos meus projetos desenvolvidos em Python.")
-    
+# ----------- PÁGINA INICIAL -----------
+if projeto == "Início":
+    st.title("✨ Portfólio Yasmin")
+    st.write("Bem-vindo(a)! Aqui estão alguns dos meus projetos de programação:")
     st.markdown("""
-    ### 🔸 Projetos disponíveis:
-    - Estruturas de decisão e repetição  
-    - Recursividade  
-    - Consumo de APIs externas  
-    - Processamentos simples e eficientes  
+    - 🌿 Estruturas de decisão e repetição  
+    - 🌸 Recursividade  
+    - 🌙 Consumo de APIs externas  
+    - ⭐ Processamentos eficientes  
     """)
 
-# DÓLAR
-elif opcao == "Dólar (conversão)":
-    st.title("💲 Conversor de Dólar")
 
-    valor = st.number_input("Digite o valor em reais (R$):", min_value=0.0, step=0.5)
+# ----------- PROGRAMA DO DÓLAR -----------
+elif projeto == "Dólar":
+    st.title("💱 Conversor de Dólar")
 
-    cotacao = 5.65  # exemplo
-    convertido = valor / cotacao
+    valor = st.number_input("Digite um valor em dólar (US$):", min_value=0.0)
 
-    st.write(f"Com R$ {valor:.2f}, você compra **US$ {convertido:.2f}**")
+    if st.button("Converter"):
+        convertido = valor * 5.50
+        st.success(f"💰 **Valor em reais: R$ {convertido:,.2f}**")
 
-# CEP
-elif opcao == "Consulta CEP":
-    st.title("📍 Consulta CEP via API")
+    # Botão para explicação do código
+    if st.button("📘 Ver explicação do código"):
+        st.info("""
+        Este programa multiplica o valor em dólar por uma taxa fixa (5.50).  
+        Ele usa:
+        - `number_input` para digitar valores  
+        - Uma conta simples `valor * 5.50`  
+        - `st.success` para mostrar o resultado formatado com R$  
+        """)
+
+
+# ----------- PROGRAMA DE CEP -----------
+elif projeto == "CEP":
+    st.title("📮 Consulta de CEP")
 
     cep = st.text_input("Digite o CEP:")
 
-    if st.button("Consultar"):
-        import requests
+    if st.button("Buscar CEP"):
+        st.write("🔎 *Aqui entraria o código de consulta de API real*")
 
-        try:
-            r = requests.get(f"https://viacep.com.br/ws/{cep}/json/")
-            dados = r.json()
+    if st.button("📘 Ver explicação do código"):
+        st.info("""
+        O programa usa uma API (ViaCEP) para buscar informações de endereço.  
+        - Envia requisição HTTP  
+        - Recebe JSON  
+        - Exibe rua, bairro e cidade  
+        """)
 
-            if "erro" in dados:
-                st.error("CEP não encontrado.")
-            else:
-                st.write("### Resultado:")
-                st.json(dados)
 
-        except:
-            st.error("Erro ao consultar API.")
-
-# DECISÃO E REPETIÇÃO
-elif opcao == "Decisão e Repetição":
+# ----------- DECISÃO E REPETIÇÃO -----------
+elif projeto == "Decisão e Repetição":
     st.title("🔁 Estruturas de Decisão e Repetição")
 
-    st.markdown("""
-    Este projeto demonstra:
-    - Uso de condicionais (`if`, `elif`, `else`)
-    - Laços (`for`, `while`)
-    """)
+    numero = st.number_input("Digite um número:", value=0)
 
-    numero = st.number_input("Digite um número:", step=1)
+    if st.button("Processar"):
+        if numero % 2 == 0:
+            st.success("✨ O número é **par**")
+        else:
+            st.error("🌙 O número é **ímpar**")
 
-    st.write(f"Tabuada do {numero}:")
-    for i in range(1, 11):
-        st.write(f"{numero} x {i} = {numero * i}")
+    if st.button("📘 Ver explicação do código"):
+        st.info("""
+        Este código demonstra:
+        - Uso de `if` e `else`  
+        - Identificação de número par/ímpar  
+        - Entrada numérica com `number_input`  
+        """)
 
-# RECURSIVIDADE
-elif opcao == "Recursividade":
-    st.title("🌀 Recursividade")
 
-    st.markdown("Exemplo: cálculo fatorial usando função recursiva.")
-    
-    def fatorial(n):
-        if n == 0:
-            return 1
-        return n * fatorial(n - 1)
+# ----------- RECURSIVIDADE -----------
+elif projeto == "Recursividade":
+    st.title("🌿 Recursividade — Fatorial")
 
-    n = st.number_input("Número para calcular fatorial:", min_value=0, step=1)
+    n = st.number_input("Digite um número para calcular o fatorial:", min_value=0, value=1)
+
+    def fatorial(x):
+        return 1 if x <= 1 else x * fatorial(x - 1)
 
     if st.button("Calcular"):
-        st.write(f"Fatorial de {n} é **{fatorial(n)}**")
+        st.success(f"🌸 Resultado: **{fatorial(n)}**")
 
-# ACESSO A API
-elif opcao == "Acesso a API":
-    st.title("🌐 Acesso a API Externa")
+    if st.button("📘 Ver explicação do código"):
+        st.info("""
+        A função chama ela mesma até chegar ao valor 1.  
+        Exemplo:
+        f(5) → 5 * 4 * 3 * 2 * 1  
+        """)
 
-    st.markdown("Exemplo: consulta ao preço atual do Bitcoin.")
 
-    import requests
+# ----------- API EXTERNA -----------
+elif projeto == "API Externa":
+    st.title("🌐 Consumo de API Externa")
 
-    try:
-        preco = requests.get("https://api.coindesk.com/v1/bpi/currentprice.json").json()
-        valor = preco["bpi"]["USD"]["rate"]
+    st.write("Aqui seria exibido o retorno de uma API real.")
 
-        st.write(f"Preço atual do Bitcoin: **US$ {valor}**")
-
-    except:
-        st.error("Erro ao acessar API.")
-
+    if st.button("📘 Ver explicação do código"):
+        st.info("""
+        - Uso da biblioteca `requests`  
+        - A API devolve dados em JSON  
+        - O programa transforma e exibe os dados  
+        """)
