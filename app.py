@@ -1,34 +1,35 @@
 import streamlit as st
 import requests
 
-# ==================== CONFIGURAÇÕES ====================
-st.set_page_config(page_title="Portfólio Yasmin Monteiro", layout="wide")
+# Configurações Gerais (simplificado) ====================
+st.set_page_config(page_title="Portifolio Yasmin Monteiro", layout="wide")
 
 COR_PRINCIPAL = "#FFDAB9"
-COR_SIDEBAR = "#FFE4E1"
-COR_TEXTO = "#333333"
+COR_LATERAL = "#FFE4E1"
+COR_TEXTO = "#FFFFFF"
 
-# ==================== ESTILO CSS ====================
+# Estilo CSS
 st.markdown(f"""
 <style>
+/* Fundo geral branco */
 body {{
-    background-color: white !important;
+    background-color: #FFE4E1 !important;
 }}
+
+/* Área lateral do menu */
 .sidebar .sidebar-content {{
-    background-color: {COR_SIDEBAR} !important;
+    background-color: {COR_LATERAL} !important;
 }}
-.sidebar .sidebar-content h2,
-.sidebar .sidebar-content h3,
-.sidebar .sidebar-content p,
-.sidebar .sidebar-content label {{
-    color: {COR_PRINCIPAL} !important;
+
+/* Títulos da sidebar */
+.sidebar .sidebar-content h2, .sidebar .sidebar-content h3, .sidebar .sidebar-content p, .sidebar .sidebar-content label {{
+    color: #FFFFFF !important;
     font-weight: 600;
 }}
+
+/* Títulos do conteúdo */
 h1, h2, h3 {{
-    color: {COR_PRINCIPAL};
-}}
-p, li, .block-container {{
-    color: {COR_TEXTO};
+    color: #FFFFFF;
 }}
 </style>
 """, unsafe_allow_html=True)
@@ -37,29 +38,23 @@ p, li, .block-container {{
 st.sidebar.title("📚 Projetos")
 opcao = st.sidebar.radio(
     "Escolha uma opção:",
-    [
-        "Sobre Mim",
-        "Programa Dólar",
-        "Consultar CEP",
-        "Decisão e Repetição",
-        "Recursividade",
-        "Acesso à API"
-    ]
+    ["Sobre Mim", "Programa Dólar", "Consultar CEP", "Decisão e Repetição", "Recursividade", "Acesso à API"]
 )
 
-# ==================== CONTEÚDOS ====================
+# ==================== SOBRE MIM ====================
 if opcao == "Sobre Mim":
     st.title("🎀 Sobre Mim")
     st.write(
         """
-        Oie, seja muito bem‑vindo(a)!
+        Oie, seja muito bem-vindo(a)!
 
-        Me chamo **Yasmin**, e atualmente curso a graduação de **Sistemas de Informação**.
+        Me chamo Yasmin, e atualmente curso a graduação de Sistemas de Informação.
         Aqui você encontrará alguns dos meus projetos desenvolvidos ao longo deste ano,
         com muito carinho e dedicação.
         """
     )
 
+# ==================== PROGRAMA DÓLAR ====================
 elif opcao == "Programa Dólar":
     st.title("💱 Conversor de Dólar para Real")
 
@@ -78,9 +73,9 @@ elif opcao == "Programa Dólar":
             """
         )
 
+# ==================== CONSULTAR CEP ====================
 elif opcao == "Consultar CEP":
     st.title("📍 Consultar CEP")
-
     cep = st.text_input("Digite o CEP:")
 
     if st.button("Consultar"):
@@ -96,15 +91,15 @@ elif opcao == "Consultar CEP":
                 st.write(f"**Bairro:** {dados['bairro']}")
                 st.write(f"**Cidade:** {dados['localidade']}")
                 st.write(f"**Estado:** {dados['uf']}")
-        except Exception:
+        except:
             st.error("Erro ao consultar o CEP.")
 
     with st.expander("📘 Explicação do Código"):
         st.write("O programa faz uma requisição para a API ViaCEP e retorna o endereço correspondente.")
 
+# ==================== DECISÃO E REPETIÇÃO ====================
 elif opcao == "Decisão e Repetição":
     st.title("🔄 Estruturas de Decisão e Repetição")
-
     numero = st.number_input("Digite um número:")
 
     if st.button("Verificar"):
@@ -116,6 +111,7 @@ elif opcao == "Decisão e Repetição":
     with st.expander("📘 Explicação do Código"):
         st.write("Aqui são usadas estruturas condicionais para verificar se o número é par ou ímpar.")
 
+# ==================== RECURSIVIDADE ====================
 elif opcao == "Recursividade":
     st.title("🌀 Recursividade — Fatorial")
 
@@ -132,8 +128,9 @@ elif opcao == "Recursividade":
     with st.expander("📘 Explicação do Código"):
         st.write("O cálculo do fatorial é feito chamando a função repetidamente, reduzindo o número até chegar em 1.")
 
+# ==================== ACESSO A API ====================
 elif opcao == "Acesso à API":
-    st.title("🌐 Acesso à API — Conselho Aleatório em Português")
+    st.title("🌐 Acesso a API — Conselho Aleatório em Português")
 
     if st.button("Gerar conselho"):
         try:
@@ -141,14 +138,16 @@ elif opcao == "Acesso à API":
 
             if resposta.status_code == 200:
                 conselho_en = resposta.json()["slip"]["advice"]
+
                 traducao = requests.get(
                     f"https://api.mymemory.translated.net/get?q={conselho_en}&langpair=en|pt"
                 )
                 conselho_pt = traducao.json()["responseData"]["translatedText"]
+
                 st.success(conselho_pt)
             else:
                 st.error("Não foi possível obter o conselho.")
-        except Exception:
+        except:
             st.error("Erro ao acessar a API.")
 
     with st.expander("📘 Explicação do Código"):
