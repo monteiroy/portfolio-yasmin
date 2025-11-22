@@ -3,9 +3,9 @@ import requests
 
 # Função para exibir o título e a explicação
 def exibir_titulo_e_explicacao():
-    st.title("🌸 Portfólio de Projetos 🎀")
-    st.write("Seja bem-vindo ao meu portfólio de projetos desenvolvidos durante meu curso de Sistemas de Informação! 💻")
-    st.write("Aqui, você encontrará alguns projetos que fiz com muito carinho e dedicação ao longo deste ano. 😊")
+    st.title("Portfólio Yasmin 🎀")
+    st.write("Seja bem-vindo ao meu portfólio de projetos desenvolvidos durante meu curso de Sistemas de Informação!")
+    st.write("Aqui, você encontrará alguns projetos que fiz com muito carinho e dedicação ao longo deste ano. ")
 
 # Função para o projeto de "Consultar CEP"
 def programa_consultar_cep():
@@ -50,7 +50,7 @@ def programa_converter_dolar():
         # Exemplo de cotação fixa (a cotação real pode ser obtida com uma API de câmbio)
         cotacao = 5.4  # Cotação de exemplo para fins didáticos
         valor_real = valor_dolar * cotacao
-        st.write(f"{valor_dolar} USD é igual a {valor_real:.2f} BRL.")
+        st.write(f"{valor_dolar} USD é igual a **R${valor_real:,.2f}**.")
         
     # Explicação do código
     if st.button('Explicação'):
@@ -107,20 +107,27 @@ def programa_acesso_api():
     st.header("🌐 Acesso a API")
     st.write("Este projeto faz uma chamada simples a uma API externa e exibe o resultado.")
     
-    # Obtendo o IP público através da API ipify
-    response = requests.get('https://api.ipify.org?format=json')
+    # Campo para o usuário digitar um IP
+    ip_usuario = st.text_input("Digite um endereço IP para consultar (deixe vazio para pegar o seu IP público):")
+    
+    if ip_usuario:
+        response = requests.get(f'https://ipinfo.io/{ip_usuario}/json')
+    else:
+        response = requests.get('https://ipinfo.io/json')
     
     if response.status_code == 200:
         ip_data = response.json()
-        st.write(f"Seu IP público é: {ip_data['ip']}")
+        st.write(f"IP Consultado: {ip_data['ip']}")
+        st.write(f"Localização: {ip_data['city']}, {ip_data['region']}, {ip_data['country']}")
     else:
-        st.error("Não foi possível obter o IP.")
+        st.error("Não foi possível obter as informações do IP.")
     
     # Explicação do código
     if st.button('Explicação'):
         st.write("""
-            Este programa realiza uma requisição à API ipify, que retorna o IP público do usuário.
-            Ele exibe o IP retornado pela API para que o usuário saiba qual é o seu IP público.
+            Este programa realiza uma requisição à API ipinfo.io.
+            O usuário pode digitar um IP específico ou deixar em branco para obter o seu IP público.
+            A API retorna informações como cidade, região e país do IP consultado.
         """)
 
 # Função para a aba "Sobre mim"
@@ -156,3 +163,4 @@ def main():
 # Chama a função principal para executar o app
 if __name__ == "__main__":
     main()
+
