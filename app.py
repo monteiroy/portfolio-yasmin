@@ -3,15 +3,15 @@ import requests
 
 st.set_page_config(page_title="Portfólio Yasmin Monteiro", layout="wide")
 
-# Cores delicadas
-COR_FUNDO = "#FFF0F5"      # Fundo geral rosa muito claro
-COR_AREA = "#FFFFFF"       # Área principal branca
-COR_TEXTOS = "#000000"     # Textos pretos
+# Cores
+COR_DETALHE = "#FFC0CB"  # Rosa claro para detalhes
+COR_AREA = "#FFFFFF"      # Branco para área principal
+COR_TEXTO = "#000000"     # Preto para textos
 
 st.markdown(f"""
 <style>
 html, body, .stApp {{
-    background-color: {COR_FUNDO} !important;
+    background-color: {COR_AREA} !important;
 }}
 section.main {{
     background-color: {COR_AREA} !important;
@@ -19,14 +19,20 @@ section.main {{
     border-radius: 10px;
 }}
 h1, h2, h3, p, label, span {{
-    color: {COR_TEXTOS} !important;
+    color: {COR_TEXTO} !important;
     font-weight: 600;
 }}
+.stButton>button {{
+    background-color: {COR_DETALHE} !important;
+    color: white !important;
+}}
 .sidebar .sidebar-content {{
-    background-color: {COR_FUNDO} !important;
+    background-color: {COR_DETALHE} !important;
+    padding: 1rem;
+    border-radius: 10px;
 }}
 .sidebar .sidebar-content span, .sidebar .sidebar-content label {{
-    color: {COR_TEXTOS} !important;
+    color: white !important;
     font-weight: 600;
 }}
 </style>
@@ -54,7 +60,7 @@ elif opcao == "Programa Dólar":
         resultado = valor * cotacao
         st.success(f"Valor convertido: R$ {resultado:.2f}")
     with st.expander("📘 Explicação do Projeto"):
-        st.write("Este programa converte dólares em reais multiplicando pelo valor fixo da cotação (5.60).")
+        st.write("Converte dólares em reais multiplicando pelo valor fixo da cotação (5.60).")
 
 elif opcao == "Consultar CEP":
     st.title("🏠 Consultar CEP")
@@ -105,14 +111,15 @@ elif opcao == "Acesso à API":
     st.title("🌐 Acesso à API")
     nome_input = st.text_input("Digite um nome para consultar:", "Yasmin")
     if st.button("Consultar API"):
-        response = requests.get(f"https://api.agify.io?name={nome_input}")
-        if response.status_code == 200:
+        try:
+            response = requests.get(f"https://api.agify.io?name={nome_input}")
+            response.raise_for_status()
             data = response.json()
             st.subheader("📌 Resultado da API:")
             st.write(f"Nome: {data.get('name')}")
             st.write(f"Idade estimada: {data.get('age')}")
             st.write(f"Contagem de registros: {data.get('count')}")
-        else:
+        except requests.RequestException:
             st.error("Falha ao acessar a API")
     with st.expander("📘 Explicação do Projeto"):
         st.write("Consulta a idade estimada de um nome usando a API Agify.")
